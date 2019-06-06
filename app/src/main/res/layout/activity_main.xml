@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context=".activities.MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        app:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentInsetStartWithNavigation="0dp"
+            app:navigationIcon="@drawable/menu"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <RelativeLayout
+                android:id="@+id/search_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/search_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="64dp"
+                    android:background="@drawable/edit_text_bg_selector"
+                    android:hint="search movie"
+                    android:paddingStart="8dp"
+                    android:singleLine="true"
+                    android:textSize="16sp"
+                    tools:text="Sample" />
+
+                <ImageView
+                    android:id="@+id/search_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/search_et"
+                    android:layout_alignRight="@+id/search_et"
+                    android:layout_alignBottom="@+id/search_et"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:padding="2dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/search_ico"
+                    />
+
+                <ImageView
+                    android:id="@+id/filter_btn"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_alignTop="@+id/search_btn"
+                    android:layout_alignBottom="@+id/search_btn"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/search_btn"
+                    android:src="@drawable/filter_btn" />
+
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/content_fragment_placeholder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_notch_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/appBarLayout"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"/>
+
+<!--    <fragment-->
+<!--        android:id="@+id/for_test_purpose"-->
+<!--         android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/appBarLayout"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"-->
+<!--        tools:layout="@layout/explore_fragment"/>-->
+
+
+    <ImageView
+        android:id="@+id/bottom_nav_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/button_notch_bg" />
+
+
+    <Button
+        android:id="@+id/explore_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_explore_bg"
+        android:fontFamily="@font/roboto_thin"
+        android:gravity="bottom|center_horizontal"
+        android:paddingBottom="4dp"
+        android:stateListAnimator="@null"
+        android:text="Explore"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cat_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:targetApi="lollipop" />
+
+    <Button
+        android:id="@+id/cat_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_cat_bg"
+        android:fontFamily="@font/roboto_thin"
+        android:gravity="bottom|center_horizontal"
+        android:paddingBottom="4dp"
+        android:stateListAnimator="@null"
+        android:text="Category"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fav_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/explore_btn"
+        tools:targetApi="lollipop" />
+
+    <Button
+        android:id="@+id/fav_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_fav_bg"
+        android:fontFamily="@font/roboto_thin"
+        android:gravity="bottom|center_horizontal"
+        android:paddingBottom="4dp"
+        android:stateListAnimator="@null"
+        android:text="Favorite"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/prof_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cat_btn"
+        tools:targetApi="lollipop" />
+
+    <Button
+        android:id="@+id/prof_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_prof_bg"
+        android:fontFamily="@font/roboto_thin"
+        android:gravity="bottom|center_horizontal"
+        android:paddingBottom="4dp"
+        android:stateListAnimator="@null"
+        android:text="My profile"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fav_btn"
+        tools:targetApi="lollipop" />
+
+
+    <ImageView
+        android:id="@+id/button_notch_bg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="55dp"
+        android:elevation="2dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/button_notch_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/nav_notch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18.2dp"
+        android:elevation="2dp"
+        app:layout_constraintEnd_toEndOf="@+id/explore_btn"
+        app:layout_constraintStart_toStartOf="@+id/explore_btn"
+        app:layout_constraintTop_toTopOf="@+id/button_notch_bg"
+        app:srcCompat="@drawable/nav_notch_with_ico" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFC107</color>
+    <color name="colorPrimaryDark">#333333</color>
+    <color name="colorAccent">#0F0F0F</color>
+    <color name="colorRedAccent">#D32F2F</color>
+    <color name="white_alpha20">#33FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="main_bg">#0F0F0F</color>
+    <color name="color_text_white">#ebebeb</color>
+    <color name="movie_title_textColor">#ffebebeb</color>
+
+</resources>

@@ -1,0 +1,34 @@
+{
+  "movies": [
+    {
+      "id": 10,
+      "movie_title": "The Lego Batman Movie",
+      "poster_url": "http://gdj.graphicdesignjunction.com/wp-content/uploads/2017/01/lego_batman_movie_poster.jpg",
+      "genre": "action",
+      "duration": "137 min.",
+      "year": "2017",
+      "views": 1087,
+      "plus_mark": 897
+    },
+    {
+      "id": 11,
+      "movie_title": "The Fate of the Furious",
+      "poster_url": "http://gdj.graphicdesignjunction.com/wp-content/uploads/2017/01/fate_of_the_furious_movie_poster.jpg",
+      "genre": "drama",
+      "duration": "117 min.",
+      "year": "2017",
+      "views": 3221,
+      "plus_mark": 1345
+    },
+    {
+      "id": 12,
+      "movie_title": "Resident Evil: The Final Chapter",
+      "poster_url": "http://gdj.graphicdesignjunction.com/wp-content/uploads/2017/01/resident_evil_the_final_chapter_movie_poster.jpg",
+      "genre": "action",
+      "duration": "113 min.",
+      "year": "2017",
+      "views": 1674,
+      "plus_mark": 238
+    }
+  ]
+}
