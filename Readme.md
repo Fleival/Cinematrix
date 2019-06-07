@@ -21,10 +21,10 @@ HERE Some SCREENS: <br>
      
 ![alt text][screen_2]  
 
-![alt text][screen_2]  
+![alt text][screen_3]  
 
 [screen_1]: https://github.com/Fleival/Cinematrix/blob/master/GIF/screen_1.gif  
 
 [screen_2]: https://github.com/Fleival/Cinematrix/blob/master/GIF/screen_2.gif  
 
-[screen_2]: https://github.com/Fleival/Cinematrix/blob/master/GIF/screen_3.gif  
+[screen_3]: https://github.com/Fleival/Cinematrix/blob/master/GIF/screen_3.gif  
