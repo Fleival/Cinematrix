@@ -1,5 +1,7 @@
 # **CINEMATRIX**
 
+## This is my pet for learning porpose
+
 * application uses clean architecture implementing the MVVM pattern together
 with Dagger;
 
@@ -14,9 +16,11 @@ Retrofit2;
 * graphics and multimedia applications are processed using the Glide and
 ExoPlayer libraries;
 #
-
-![alt text][screen_1]      ![alt text][screen_2]  
+HERE Some SCREENS: <br>
+![alt text][screen_1] 
+     
+![alt text][screen_2]  
 
 [screen_1]: https://github.com/Fleival/Cinematrix/blob/master/GIF/screen_1.gif  
 
-[screen_2]: https://github.com/Fleival/Cinematrix/blob/master/GIF/screen_1.gif  
+[screen_2]: https://github.com/Fleival/Cinematrix/blob/master/GIF/screen_2.gif  
