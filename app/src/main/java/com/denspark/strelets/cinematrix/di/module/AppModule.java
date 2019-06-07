@@ -27,11 +27,14 @@ public class AppModule {
     // --- DATABASE INJECTION ---
 
     @Provides
-    @Singleton
+//    @Singleton
     MovieDatabase provideDatabase(Application application) {
-        return Room.databaseBuilder(application,
-                MovieDatabase.class, "MovieDatabase.db")
-                .build();
+
+//        return Room.databaseBuilder(application,
+//                MovieDatabase.class, "MovieDatabase.db")
+//                .build();
+
+        return MovieDatabase.getINSTANCE(application, false);
     }
 
     @Provides
