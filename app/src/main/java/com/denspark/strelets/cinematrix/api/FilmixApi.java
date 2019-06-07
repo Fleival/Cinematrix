@@ -1,4 +1,4 @@
-package com.denspark.strelets.cinematrix.not_for_production;
+package com.denspark.strelets.cinematrix.api;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
