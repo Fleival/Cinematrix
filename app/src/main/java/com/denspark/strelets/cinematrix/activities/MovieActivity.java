@@ -214,12 +214,13 @@ public class MovieActivity extends AppCompatActivity {
         movie_country_d_tv.setText(movie.getCountry());
 
 // TODO: 05.06.2019  NPE here:
-//        String genreNames="";
-//        for (Genre g : movie.getGenres()){
-//            genreNames = genreNames + g.getName()+" ";
-//        }
-//        movie_genre_d_tv.setText(genreNames);
-
+        if (movie.getGenres() != null) {
+            String genreNames = "";
+            for (Genre g : movie.getGenres()) {
+                genreNames = genreNames + g.getName() + " ";
+            }
+            movie_genre_d_tv.setText(genreNames);
+        }
         movie_duration_d_tv.setText(movie.getDuration());
         movie_description_d_tv.setText(movie.getDescriptionStory());
 

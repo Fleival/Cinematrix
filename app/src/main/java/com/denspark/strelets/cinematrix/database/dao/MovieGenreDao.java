@@ -1,5 +1,6 @@
 package com.denspark.strelets.cinematrix.database.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -21,4 +22,7 @@ public interface MovieGenreDao {
 
     @Query("SELECT * FROM genre INNER JOIN movie_genre_join ON genre.id=movie_genre_join.genreId WHERE movie_genre_join.movieId=:movieId")
     List<Genre> getGenresForMovie(int movieId);
+
+    @Query("SELECT * FROM genre INNER JOIN movie_genre_join ON genre.id=movie_genre_join.genreId WHERE movie_genre_join.movieId=:movieId")
+    LiveData<List<Genre>> getGenresForMovieLive(int movieId);
 }

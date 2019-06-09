@@ -67,8 +67,13 @@ public class MovieRepository {
         MediatorLiveData<FilmixMovie> filmixMovieMediatorLiveData = new MediatorLiveData<>();
         filmixMovieMediatorLiveData.addSource(movieDao.load(id), new Observer<FilmixMovie>() {
             @Override public void onChanged(FilmixMovie filmixMovie) {
-                filmixMovie.setGenres((movieGenreDao.getGenresForMovie(id)));
-                filmixMovieMediatorLiveData.setValue(filmixMovie);
+                movieGenreDao.getGenresForMovieLive(id).observeForever(new Observer<List<Genre>>() {
+                    @Override public void onChanged(List<Genre> genres) {
+                        filmixMovie.setGenres(genres);
+                        filmixMovieMediatorLiveData.setValue(filmixMovie);
+                    }
+                });
+
             }
         });
         return filmixMovieMediatorLiveData;

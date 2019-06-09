@@ -50,7 +50,7 @@ public class MovieViewModel extends ViewModel {
     }
 
     public LiveData<FilmixMovie> getCurrentMovie(int id){
-        return repository.currentMovie(id);
+        return repository.getCurrMovie(id);
     }
 
     public void save(FilmixMovie movie){
