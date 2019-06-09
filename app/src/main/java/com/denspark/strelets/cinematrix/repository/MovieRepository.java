@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
@@ -59,6 +61,17 @@ public class MovieRepository {
     public LiveData<PagedList<FilmixMovie>> getAllMovies(PagedList.Config config) {
         DataSource.Factory<Integer, FilmixMovie> factory = movieDao.getAllMoviesPaged();
         return new LivePagedListBuilder<>(factory, config).build();
+    }
+
+    public LiveData<FilmixMovie> getCurrMovie(int id){
+        MediatorLiveData<FilmixMovie> filmixMovieMediatorLiveData = new MediatorLiveData<>();
+        filmixMovieMediatorLiveData.addSource(movieDao.load(id), new Observer<FilmixMovie>() {
+            @Override public void onChanged(FilmixMovie filmixMovie) {
+                filmixMovie.setGenres((movieGenreDao.getGenresForMovie(id)));
+                filmixMovieMediatorLiveData.setValue(filmixMovie);
+            }
+        });
+        return filmixMovieMediatorLiveData;
     }
 
     public LiveData<FilmixMovie> currentMovie(int id){

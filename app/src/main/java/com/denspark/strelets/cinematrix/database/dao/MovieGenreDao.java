@@ -20,5 +20,5 @@ public interface MovieGenreDao {
     List<FilmixMovie> getMovieForGenre(int genreId);
 
     @Query("SELECT * FROM genre INNER JOIN movie_genre_join ON genre.id=movie_genre_join.genreId WHERE movie_genre_join.movieId=:movieId")
-    List<Genre> getGenresForPerson(int movieId);
+    List<Genre> getGenresForMovie(int movieId);
 }

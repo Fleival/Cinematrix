@@ -8,7 +8,9 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.denspark.strelets.cinematrix.database.MovieDatabase;
 import com.denspark.strelets.cinematrix.database.dao.MovieDao;
+import com.denspark.strelets.cinematrix.database.dao.MovieGenreDao;
 import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
+import com.denspark.strelets.cinematrix.database.entity.Genre;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,13 +22,16 @@ import static org.junit.Assert.assertThat;
 
 
 import java.io.IOException;
+import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
 public class RoomQueryTests {
     private static final String TAG = "RoomQueryTests";
     private MovieDao movieDao;
+    private MovieGenreDao movieGenreDao;
     private MovieDatabase db;
     private Context context;
+
 
     @Before
     public void initDb() {
@@ -35,6 +40,7 @@ public class RoomQueryTests {
         context = ApplicationProvider.getApplicationContext();
         db = MovieDatabase.getINSTANCE(context, true);
         movieDao = db.movieDao();
+        movieGenreDao = db.movieGenreDao();
     }
 
     @After
@@ -45,6 +51,9 @@ public class RoomQueryTests {
     @Test
     public void testMovieDao() {
         FilmixMovie movie = movieDao.getById(491);
+        List<Genre> genreList = movieGenreDao.getGenresForMovie(491);
+
+//        Log.d(TAG, "Genres: " + genreList);
         assertThat(movie.getName(), equalTo("Супергерои"));
     }
 }

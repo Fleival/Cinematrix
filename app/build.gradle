@@ -113,9 +113,11 @@ dependencies {
 
     // DAGGER 2
     implementation 'com.google.dagger:dagger-android:2.17'
+    androidTestImplementation 'com.google.dagger:dagger-android:2.17'
     implementation 'com.google.dagger:dagger-android-support:2.17'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.17'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.17'
+    androidTestAnnotationProcessor 'com.google.dagger:dagger-compiler:2.17'
 
 //    GSYVideoPlayer https://github.com/CarGuo/GSYVideoPlayer
 //    implementation 'com.shuyu:GSYVideoPlayer:7.0.1'
