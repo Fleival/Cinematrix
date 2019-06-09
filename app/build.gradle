@@ -56,6 +56,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test.ext:truth:1.2.0'
+    androidTestImplementation "androidx.arch.core:core-testing:2.0.1"
 
     // Unit testing
     testImplementation 'androidx.test:runner:1.2.0'

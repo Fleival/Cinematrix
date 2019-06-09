@@ -1,6 +1,9 @@
 package com.denspark.strelets.cinematrix;
 
 import android.content.Context;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.denspark.strelets.cinematrix.database.MovieDatabase;
 import com.denspark.strelets.cinematrix.database.dao.MovieDao;
@@ -9,6 +12,7 @@ import com.denspark.strelets.cinematrix.di.component.DaggerJTestComponent;
 import com.denspark.strelets.cinematrix.repository.MovieRepository;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -28,6 +32,8 @@ public class RepositoryTest {
     public MovieDao movieDao;
     @Inject
     public MovieDatabase db;
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
     @Before
     public void initDagger() {
@@ -41,9 +47,15 @@ public class RepositoryTest {
 
     @Test
     public void testMovieDao() {
+        LiveData<FilmixMovie> currentMovie = repository.getCurrMovie(491);
         FilmixMovie movie = movieDao.getById(491);
         assertEquals(movie.getName(), "Супергерои");
         assertNotEquals(movie.getName(), "FooBar");
+        currentMovie.observeForever(new Observer<FilmixMovie>() {
+            @Override public void onChanged(FilmixMovie filmixMovie) {
+                FilmixMovie movie1 = filmixMovie;
+                assertEquals(movie1.getName(), "Супергерои");
+            }
+        });
     }
-
 }
