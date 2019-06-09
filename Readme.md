@@ -1,12 +1,12 @@
 # **CINEMATRIX**
 
-## This is my pet for learning porpose
+## This is my pet-project for learning purpose
 
 * application uses clean architecture implementing the MVVM pattern together
 with Dagger;
 
-* interface built on ConstraintLayout and RecyclerView, displaying data via
-ViewModel using LiveData;
+* User interface built on ConstraintLayout and RecyclerView, displaying data via
+ViewModel using LiveData. During prototyping, ui was built using AdobeXD and AvoCode, Photoshop, Illustrator; 
 
 * GSON is used as a json parser;
 
