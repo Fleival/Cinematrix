@@ -10,10 +10,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
@@ -45,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
 
     private List<Drawable> notchIconsList = new ArrayList<>();
+
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
 
     private ConstraintLayout.LayoutParams navNotchParams;
     @BindView(R.id.nav_notch)
@@ -112,6 +118,17 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         navButtons.get(CAT_BTN).setOnClickListener(clickNavButton(1));
         navButtons.get(FAV_BTN).setOnClickListener(clickNavButton(2));
         navButtons.get(PROF_BTN).setOnClickListener(clickNavButton(3));
+
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this,
+                drawer,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu);
 
 
     }
@@ -218,5 +235,14 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     private void configureDagger() {
         AndroidInjection.inject(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
