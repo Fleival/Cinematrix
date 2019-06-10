@@ -4,12 +4,17 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,6 +24,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.transition.Slide;
+import androidx.transition.Transition;
+import androidx.transition.TransitionManager;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
@@ -33,6 +41,7 @@ import dagger.android.support.HasSupportFragmentInjector;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector {
 
@@ -46,11 +55,17 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     private static final int FAV_BTN = 2;
     private static final int PROF_BTN = 3;
 
+    boolean isUp;
+
 
     private List<Drawable> notchIconsList = new ArrayList<>();
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
+
+
+    @BindView(R.id.filter_container)
+    LinearLayout filterLinearLayout;
 
     private ConstraintLayout.LayoutParams navNotchParams;
     @BindView(R.id.nav_notch)
@@ -60,10 +75,13 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     @BindView(R.id.filter_btn)
     ImageView filterBtn;
 
+    @BindView(R.id.content_fragment_placeholder)
+    FrameLayout fragmentContainer;
+
     @BindViews({R.id.explore_btn, R.id.cat_btn, R.id.fav_btn, R.id.prof_btn})
     List<Button> navButtons;
 
-    private Animation animation;
+    private Animation bottomNavAnimation;
 
     private Fragment exploreFragment;
     private Fragment favoriteFragment;
@@ -96,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         navButtons.get(EXPLORE_BTN).setSelected(true);
         checkPressedButtonStyle();
 
-        animation = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        bottomNavAnimation = AnimationUtils.loadAnimation(this, R.anim.bounce);
 
 
         searchBtn.setOnTouchListener(new View.OnTouchListener() {
@@ -128,9 +146,17 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.menu);
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.menu);
 
+        filterLinearLayout.setVisibility(View.GONE);
+        isUp = true;
 
+        filterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+//                filterLinearLayout.setVisibility(View.GONE);
+                onSlideViewButtonClick(filterLinearLayout);
+            }
+        });
     }
 
     @Override
@@ -150,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
                 }
             }
             checkPressedButtonStyle();
-            playAnimEffect(navNotch);
+            playBottomNavAnimation(navNotch);
 
             switch (pos) {
                 case 0:
@@ -168,9 +194,64 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         };
     }
 
-    private void playAnimEffect(View v) {
+    private void playBottomNavAnimation(View v) {
         v.clearAnimation();
-        v.startAnimation(animation);
+        v.startAnimation(bottomNavAnimation);
+    }
+
+    private void showHideFilterDrawer() {
+        Transition transition = new Slide(Gravity.TOP);
+        transition.setDuration(600);
+        transition.addTarget(R.id.filter_container);
+        transition.addTarget(R.id.filter_container);
+
+        TransitionManager.beginDelayedTransition(drawer, transition);
+        filterLinearLayout.setVisibility(needToShow(filterLinearLayout) ? View.VISIBLE : View.GONE);
+    }
+
+    private boolean needToShow(View v ){
+        if (v.getVisibility() == View.VISIBLE) {
+            return false;
+        } else {
+           return true;
+        }
+
+    }
+
+    // slide the view from below itself to the current position
+    public void slideUp(View view){
+
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                0,  // fromYDelta
+                -view.getHeight());                // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+        isUp=true;
+    }
+
+    // slide the view from its current position to below itself
+    public void slideDown(View view){
+        view.setVisibility(View.VISIBLE);
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                -view.getHeight(),                 // fromYDelta
+                0); // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+        isUp = false;
+    }
+
+    public void onSlideViewButtonClick(View view) {
+        if (isUp) {
+            slideDown(view);
+        } else {
+            slideUp(view);
+        }
     }
 
     private void showFragment(Bundle savedInstanceState) {

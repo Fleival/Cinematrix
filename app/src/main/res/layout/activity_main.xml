@@ -7,9 +7,7 @@
         android:layout_height="match_parent"
         android:id="@+id/drawer_layout"
         tools:context=".activities.MainActivity"
-        android:fitsSystemWindows="true"
-        tools:openDrawer="start"
->
+        android:fitsSystemWindows="true">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,14 +15,120 @@
             android:layout_height="match_parent"
             android:focusable="true"
             android:focusableInTouchMode="true"
-    >
+            app:layout_constraintStart_toEndOf="@+id/cat_btn" app:layout_constraintEnd_toEndOf="@+id/cat_btn">
+
+        <FrameLayout
+                android:id="@+id/content_fragment_placeholder"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_notch_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/appBarLayout"
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"/>
+
+        <LinearLayout
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+                android:id="@+id/filter_container"
+                android:orientation="vertical"
+                android:background="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp">
+
+                <TextView
+                        android:id="@+id/filter_year_label"
+                        android:textSize="18sp"
+                        android:textColor="@color/color_text_white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Год:"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center"
+                />
+                <Spinner
+                        android:id="@+id/filter_spinner_year"
+                        android:layout_width="180dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"/>
+
+
+            </RelativeLayout>
+            <View
+
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"
+            />
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp">
+
+                <TextView
+                        android:id="@+id/filter_genre_label"
+                        android:textSize="18sp"
+                        android:textColor="@color/color_text_white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Жанр:"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center"
+                />
+                <Spinner
+                        android:id="@+id/filter_spinner_genre"
+                        android:layout_width="180dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"/>
+
+
+            </RelativeLayout>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"
+            />
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp">
+
+                <TextView
+                        android:id="@+id/filter_last_date_label"
+                        android:textSize="18sp"
+                        android:textColor="@color/color_text_white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Дата добавления:"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center"
+                />
+                <Spinner
+                        android:id="@+id/filter_spinner_last_date"
+                        android:layout_width="180dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"/>
+
+
+            </RelativeLayout>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"
+            />
+        </LinearLayout>
+
 
         <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimaryDark"
-                app:elevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -84,27 +188,20 @@
 
             </androidx.appcompat.widget.Toolbar>
 
-
         </com.google.android.material.appbar.AppBarLayout>
 
-        <FrameLayout
-                android:id="@+id/content_fragment_placeholder"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/button_notch_bg"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/appBarLayout"
-                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"/>
 
-<!--        <fragment-->
-<!--                android:id="@+id/for_test_purpose"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="0dp"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="@+id/appBarLayout"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"-->
-<!--                tools:layout="@layout/explore_fragment"/>-->
+
+        <!--        <fragment-->
+        <!--                android:id="@+id/for_test_purpose"-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="0dp"-->
+        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="@+id/appBarLayout"-->
+        <!--                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"-->
+        <!--                tools:layout="@layout/explore_fragment"/>-->
+
 
 
         <ImageView
