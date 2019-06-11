@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item>
+                <bitmap android:src="@drawable/spinner_bg"
+                        android:gravity="center"/>
+            </item>
+
+            <item android:end="10dp">
+
+                <bitmap android:src="@drawable/spinner_ico"
+                        android:gravity="end"/>
+            </item>
+        </layer-list>
+    </item>
+</selector>

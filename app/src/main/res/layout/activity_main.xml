@@ -29,12 +29,13 @@
         <LinearLayout
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+                app:layout_constraintBottom_toBottomOf="@+id/appBarLayout"
                 android:id="@+id/filter_container"
                 android:orientation="vertical"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/colorPrimaryDarker"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                tools:translationY="110dp">
 
             <RelativeLayout
                     android:layout_width="wrap_content"
@@ -44,12 +45,12 @@
                         android:id="@+id/filter_year_label"
                         android:textSize="18sp"
                         android:textColor="@color/color_text_white"
+                        android:fontFamily="@font/roboto_thin"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="Год:"
                         android:layout_marginStart="8dp"
-                        android:gravity="center"
-                />
+                        android:gravity="center"/>
                 <Spinner
                         android:id="@+id/filter_spinner_year"
                         android:layout_width="180dp"
@@ -57,14 +58,12 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"/>
 
-
             </RelativeLayout>
             <View
 
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:attr/listDivider"
-            />
+                    android:background="?android:attr/listDivider"/>
             <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="36dp">
@@ -73,12 +72,12 @@
                         android:id="@+id/filter_genre_label"
                         android:textSize="18sp"
                         android:textColor="@color/color_text_white"
+                        android:fontFamily="@font/roboto_thin"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="Жанр:"
                         android:layout_marginStart="8dp"
-                        android:gravity="center"
-                />
+                        android:gravity="center"/>
                 <Spinner
                         android:id="@+id/filter_spinner_genre"
                         android:layout_width="180dp"
@@ -91,8 +90,7 @@
             <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:attr/listDivider"
-            />
+                    android:background="?android:attr/listDivider"/>
             <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="36dp">
@@ -101,12 +99,12 @@
                         android:id="@+id/filter_last_date_label"
                         android:textSize="18sp"
                         android:textColor="@color/color_text_white"
+                        android:fontFamily="@font/roboto_thin"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="Дата добавления:"
                         android:layout_marginStart="8dp"
-                        android:gravity="center"
-                />
+                        android:gravity="center"/>
                 <Spinner
                         android:id="@+id/filter_spinner_last_date"
                         android:layout_width="180dp"
@@ -119,8 +117,7 @@
             <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:attr/listDivider"
-            />
+                    android:background="?android:attr/listDivider"/>
         </LinearLayout>
 
 
@@ -171,8 +168,7 @@
                             android:cropToPadding="true"
                             android:padding="2dp"
                             android:scaleType="centerInside"
-                            android:src="@drawable/search_ico"
-                    />
+                            android:src="@drawable/search_ico"/>
 
                     <ImageView
                             android:id="@+id/filter_btn"

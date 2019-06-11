@@ -32,7 +32,7 @@ public class MoviePagingAdapter extends PagedListAdapter<FilmixMovie, MoviePagin
     public class MovieHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.movie_title_tv) TextView titleTextView;
-        @BindView(R.id.movie_genre_tv) TextView genreTextView;
+//        @BindView(R.id.movie_genre_tv) TextView genreTextView;
         @BindView(R.id.movie_views_tv) TextView viewsTextView;
         @BindView(R.id.movie_year_tv) TextView yearTextView;
         @BindView(R.id.movie_duration_tv) TextView durationTextView;
@@ -106,7 +106,7 @@ public class MoviePagingAdapter extends PagedListAdapter<FilmixMovie, MoviePagin
             Context context = holder.bluredPosterImageView.getContext();
 
             holder.titleTextView.setText(currentMovie.getName());
-            holder.genreTextView.setText("genre to do");
+//            holder.genreTextView.setText("genre to do");
             holder.viewsTextView.setText("0");
             holder.yearTextView.setText(currentMovie.getYear());
             holder.durationTextView.setText(currentMovie.getDuration());

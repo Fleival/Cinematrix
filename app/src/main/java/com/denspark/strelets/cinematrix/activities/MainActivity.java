@@ -1,5 +1,6 @@
 package com.denspark.strelets.cinematrix.activities;
 
+import android.animation.ObjectAnimator;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
@@ -11,10 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.*;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -80,6 +78,13 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @BindViews({R.id.explore_btn, R.id.cat_btn, R.id.fav_btn, R.id.prof_btn})
     List<Button> navButtons;
+
+    @BindView(R.id.filter_spinner_year)
+    Spinner spinnerYear;
+    @BindView(R.id.filter_spinner_genre)
+    Spinner spinnerGenre;
+    @BindView(R.id.filter_spinner_last_date)
+    Spinner spinnerReleaseDate;
 
     private Animation bottomNavAnimation;
 
@@ -147,13 +152,14 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.menu);
+        initSpinnerYear();
+        initSpinnerGenre();
 
-        filterLinearLayout.setVisibility(View.GONE);
+
         isUp = true;
 
         filterBtn.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-//                filterLinearLayout.setVisibility(View.GONE);
                 onSlideViewButtonClick(filterLinearLayout);
             }
         });
@@ -199,54 +205,28 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         v.startAnimation(bottomNavAnimation);
     }
 
-    private void showHideFilterDrawer() {
-        Transition transition = new Slide(Gravity.TOP);
-        transition.setDuration(600);
-        transition.addTarget(R.id.filter_container);
-        transition.addTarget(R.id.filter_container);
+    private void slideUp(View view){
+        ObjectAnimator animator = ObjectAnimator.ofFloat(
+                view,
+                "translationY",
+                -view.getHeight());
 
-        TransitionManager.beginDelayedTransition(drawer, transition);
-        filterLinearLayout.setVisibility(needToShow(filterLinearLayout) ? View.VISIBLE : View.GONE);
-    }
-
-    private boolean needToShow(View v ){
-        if (v.getVisibility() == View.VISIBLE) {
-            return false;
-        } else {
-           return true;
-        }
-
-    }
-
-    // slide the view from below itself to the current position
-    public void slideUp(View view){
-
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                0,  // fromYDelta
-                -view.getHeight());                // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
+        animator.setDuration(500);
+        animator.start();
         isUp=true;
     }
 
-    // slide the view from its current position to below itself
-    public void slideDown(View view){
-        view.setVisibility(View.VISIBLE);
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                -view.getHeight(),                 // fromYDelta
-                0); // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
+    private void slideDown(View view){
+        ObjectAnimator animator = ObjectAnimator.ofFloat(
+                view,
+                "translationY",
+                (view.getHeight()-2));
+        animator.setDuration(500);
+        animator.start();
         isUp = false;
     }
 
-    public void onSlideViewButtonClick(View view) {
+    private void onSlideViewButtonClick(View view) {
         if (isUp) {
             slideDown(view);
         } else {
@@ -325,5 +305,34 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void initSpinnerYear(){
+        String[] years = { "2019", "2018", "2017", "2016", "2015" };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerYear.setAdapter(adapter);
+    }
+    private void initSpinnerGenre(){
+        String[] genres = {"драма",
+                "мелодрама",
+                "комедия",
+                "семейный",
+                "триллер",
+                "реальное тв",
+                "мюзикл",
+                "криминал",
+                "боевик",
+                "короткометражка",
+                "ужасы",
+                "детектив",
+                "приключения",
+                "военный",
+                "детский",
+                "фэнтези"
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, genres);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGenre.setAdapter(adapter);
     }
 }

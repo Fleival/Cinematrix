@@ -7,19 +7,38 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor" tools:targetApi="21">@color/colorPrimaryDark</item>
+        <item name="android:spinnerStyle">@style/Widget.Spinner</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:spinnerStyle">@style/Widget.Spinner</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:spinnerStyle">@style/Widget.Spinner</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="Widget.Spinner" parent="android:Widget">
+        <item name="android:background">@drawable/spinner</item>
+        <item name="android:clickable">true</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:dropDownSelector">@android:drawable/list_selector_background</item>
+        <item name="android:popupBackground">@android:drawable/spinner_dropdown_background</item>
+    </style>
+
+    <style name="SpinnerItem" parent="android:TextAppearance.Widget.TextView">
+        <item name="android:textColor">@color/color_text_white</item>
+        <item name="android:paddingStart">16dp</item>
+<!--        <item name="android:gravity">center_horizontal</item>-->
+    </style>
 
 </resources>
