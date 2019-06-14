@@ -6,6 +6,7 @@ import com.denspark.strelets.cinematrix.api.MovieWebService;
 import com.denspark.strelets.cinematrix.database.MovieDatabase;
 import com.denspark.strelets.cinematrix.database.dao.*;
 import com.denspark.strelets.cinematrix.database.entity.Genre;
+import com.denspark.strelets.cinematrix.database.entity.StateOfRemoteDB;
 import com.denspark.strelets.cinematrix.repository.MovieRepository;
 import com.google.gson.*;
 import dagger.Module;
@@ -67,6 +68,19 @@ public class AppModule {
         return database.movieGenreDao();
     }
 
+    @Provides
+    @Singleton
+    StateOfLocalDBdao provideStateOfLocalDBdao(MovieDatabase database) {
+        return database.stateOfLocalDBdao();
+    }
+
+
+    @Provides
+    @Singleton
+    StateOfRemoteDBdao provideStateOfRemoteDBdao(MovieDatabase database) {
+        return database.stateOfRemoteDBdao();
+    }
+
     // --- REPOSITORY INJECTION ---
 
     @Provides
@@ -82,6 +96,8 @@ public class AppModule {
             GenreDao genreDao,
             PersonGenreDao personGenreDao,
             MovieGenreDao movieGenreDao,
+            StateOfRemoteDBdao stateOfRemoteDBdao,
+            StateOfLocalDBdao stateOfLocalDBdao,
             MovieWebService webservice,
             Executor executor) {
 
@@ -91,6 +107,8 @@ public class AppModule {
                 genreDao,
                 personGenreDao,
                 movieGenreDao,
+                stateOfRemoteDBdao,
+                stateOfLocalDBdao,
                 webservice,
                 executor);
     }

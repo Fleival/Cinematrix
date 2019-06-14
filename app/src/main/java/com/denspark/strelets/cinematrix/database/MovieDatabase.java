@@ -16,7 +16,9 @@ import com.denspark.strelets.cinematrix.database.entity.*;
         Person.class,
         Genre.class,
         PersonGenreJoin.class,
-        MovieGenreJoin.class
+        MovieGenreJoin.class,
+        StateOfRemoteDB.class,
+        StateOfLocalDB.class
         }, version = 1, exportSchema = false)
 
 @TypeConverters(DateConverter.class)
@@ -36,6 +38,10 @@ public abstract class MovieDatabase extends RoomDatabase {
     public abstract PersonGenreDao personGenreDao();
 
     public abstract MovieGenreDao movieGenreDao();
+
+    public abstract StateOfRemoteDBdao stateOfRemoteDBdao();
+
+    public abstract StateOfLocalDBdao stateOfLocalDBdao();
 
     public static MovieDatabase getINSTANCE(Context context, boolean TEST_MODE) {
         if (INSTANCE == null) {

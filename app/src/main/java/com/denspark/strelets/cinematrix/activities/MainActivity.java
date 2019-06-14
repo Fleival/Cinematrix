@@ -5,13 +5,10 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.*;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,16 +19,22 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.transition.Slide;
-import androidx.transition.Transition;
-import androidx.transition.TransitionManager;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import com.denspark.strelets.cinematrix.R;
+import com.denspark.strelets.cinematrix.adapters.CheckableSpinnerAdapter;
+import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
+import com.denspark.strelets.cinematrix.database.entity.Genre;
 import com.denspark.strelets.cinematrix.fragments.CategoryFragment;
 import com.denspark.strelets.cinematrix.fragments.ExploreFragment;
 import com.denspark.strelets.cinematrix.fragments.FavoriteFragment;
+import com.denspark.strelets.cinematrix.view_models.FactoryViewModel;
+import com.denspark.strelets.cinematrix.view_models.MovieViewModel;
 import dagger.android.AndroidInjection;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
@@ -57,6 +60,11 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
 
     private List<Drawable> notchIconsList = new ArrayList<>();
+
+    @Inject
+    FactoryViewModel viewModelFactory;
+
+    private MovieViewModel movieViewModel;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -85,11 +93,20 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     Spinner spinnerGenre;
     @BindView(R.id.filter_spinner_last_date)
     Spinner spinnerReleaseDate;
+    @BindView(R.id.apply_filter_btn)
+    Button applyFilterBtn;
+    @BindView(R.id.clear_filter_btn)
+    Button clearFilterBtn;
 
     private Animation bottomNavAnimation;
 
+    List<CheckableSpinnerAdapter.SpinnerItem<Genre>> spinner_genre_items = new ArrayList<>();
+    CheckableSpinnerAdapter genreSpinnerAdapter;
+    List<Genre> selected_genre_items = new ArrayList<>();
+
     private Fragment exploreFragment;
     private Fragment favoriteFragment;
+    LiveData<PagedList<FilmixMovie>> filterLiveData;
 
     List<Fragment> fragments = new ArrayList<>();
 
@@ -134,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             @Override
             public void onClick(View v) {
                 filterBtn.setSelected((!filterBtn.isSelected()));
+                onSlideViewButtonClick(filterLinearLayout);
             }
         });
 
@@ -153,13 +171,34 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         toggle.syncState();
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.menu);
         initSpinnerYear();
-        initSpinnerGenre();
+        configureViewModel();
 
 
         isUp = true;
+        ExploreFragment ef = (ExploreFragment) exploreFragment;
 
-        filterBtn.setOnClickListener(new View.OnClickListener() {
+        applyFilterBtn.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
+                Log.d(TAG, "onClick: applyFilterBtn selected_genre_items = " + selected_genre_items);
+                movieViewModel.setGenreFilter(selected_genre_items);
+                filterLiveData = movieViewModel.getMoviesForGenrePagged();
+                filterLiveData.observe(MainActivity.this, new Observer<PagedList<FilmixMovie>>() {
+                    @Override public void onChanged(PagedList<FilmixMovie> movies) {
+                        Log.d(TAG, "onChanged: filtered films " + movies);
+                        ef.setPagingAdapterData(movies);
+                    }
+                });
+                filterBtn.setSelected((!filterBtn.isSelected()));
+                onSlideViewButtonClick(filterLinearLayout);
+            }
+        });
+        clearFilterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (filterLiveData != null) {
+                    filterLiveData.removeObservers(MainActivity.this);
+                    ef.setObserver();
+                }
+                filterBtn.setSelected((!filterBtn.isSelected()));
                 onSlideViewButtonClick(filterLinearLayout);
             }
         });
@@ -205,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         v.startAnimation(bottomNavAnimation);
     }
 
-    private void slideUp(View view){
+    private void slideUp(View view) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(
                 view,
                 "translationY",
@@ -213,14 +252,14 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
         animator.setDuration(500);
         animator.start();
-        isUp=true;
+        isUp = true;
     }
 
-    private void slideDown(View view){
+    private void slideDown(View view) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(
                 view,
                 "translationY",
-                (view.getHeight()-2));
+                (view.getHeight() - 2));
         animator.setDuration(500);
         animator.start();
         isUp = false;
@@ -307,32 +346,46 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         }
     }
 
-    private void initSpinnerYear(){
-        String[] years = { "2019", "2018", "2017", "2016", "2015" };
+    private void configureViewModel() {
+        movieViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(MovieViewModel.class);
+
+        initSpinnerGenre();
+        movieViewModel.gelAllGenres().observe(this, new Observer<List<Genre>>() {
+            @Override public void onChanged(List<Genre> genres) {
+                if (genres != null) {
+//                    String[] genreNames= new String[genres.size()];
+//                    for (int i = 0; i < genres.size(); i++) {
+//                        genreNames[i] = genres.get(i).getName();
+//                    }
+                    updateSpinnerGenre(genres);
+                }
+            }
+        });
+
+        movieViewModel.updateStateOfRemoteDB();
+    }
+
+    private void initSpinnerYear() {
+        String[] years = {"2019", "2018", "2017", "2016", "2015"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerYear.setAdapter(adapter);
     }
-    private void initSpinnerGenre(){
-        String[] genres = {"драма",
-                "мелодрама",
-                "комедия",
-                "семейный",
-                "триллер",
-                "реальное тв",
-                "мюзикл",
-                "криминал",
-                "боевик",
-                "короткометражка",
-                "ужасы",
-                "детектив",
-                "приключения",
-                "военный",
-                "детский",
-                "фэнтези"
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, genres);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerGenre.setAdapter(adapter);
+
+    private void initSpinnerGenre() {
+        String headerText = "select";
+        genreSpinnerAdapter = new CheckableSpinnerAdapter<>(this, headerText, spinner_genre_items, selected_genre_items);
+        spinnerGenre.setAdapter(genreSpinnerAdapter);
+    }
+
+    private void updateSpinnerGenre(List<Genre> genres) {
+        for (Genre o : genres) {
+            CheckableSpinnerAdapter.SpinnerItem<Genre> spinnerItem = new CheckableSpinnerAdapter.SpinnerItem<>(o, o.getName());
+            if (!spinner_genre_items.contains(spinnerItem)) {
+                spinner_genre_items.add(spinnerItem);
+            }
+            genreSpinnerAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -9,10 +9,14 @@ import androidx.lifecycle.Observer;
 import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
+import androidx.sqlite.db.SimpleSQLiteQuery;
+import androidx.sqlite.db.SupportSQLiteQuery;
 import com.denspark.strelets.cinematrix.App;
 import com.denspark.strelets.cinematrix.api.MovieWebService;
 import com.denspark.strelets.cinematrix.database.dao.*;
 import com.denspark.strelets.cinematrix.database.entity.*;
+import com.denspark.strelets.cinematrix.repository.paging.MoviesBoundaryCallback;
+import com.denspark.strelets.cinematrix.utils.PagingRequestHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,12 +30,16 @@ import java.util.concurrent.Executor;
 //Repository Version = 0.1beta
 @Singleton
 public class MovieRepository {
+    private static final String TAG = "MovieRepository";
+    private boolean isUpdating = false;
 
     private final MovieDao movieDao;
     private final PersonDao personDao;
     private final GenreDao genreDao;
     private final PersonGenreDao personGenreDao;
     private final MovieGenreDao movieGenreDao;
+    private final StateOfRemoteDBdao stateOfRemoteDBdao;
+    private final StateOfLocalDBdao stateOfLocalDBdao;
     private final Executor executor;
     private final MovieWebService webservice;
 
@@ -43,6 +51,8 @@ public class MovieRepository {
             GenreDao genreDao,
             PersonGenreDao personGenreDao,
             MovieGenreDao movieGenreDao,
+            StateOfRemoteDBdao stateOfRemoteDBdao,
+            StateOfLocalDBdao stateOfLocalDBdao,
             MovieWebService webservice,
             Executor executor) {
 
@@ -51,19 +61,41 @@ public class MovieRepository {
         this.genreDao = genreDao;
         this.personGenreDao = personGenreDao;
         this.movieGenreDao = movieGenreDao;
+        this.stateOfRemoteDBdao = stateOfRemoteDBdao;
+        this.stateOfLocalDBdao = stateOfLocalDBdao;
         this.webservice = webservice;
         this.executor = executor;
 
     }
 
 
+    private MoviesBoundaryCallback boundaryCallback = new MoviesBoundaryCallback(this);
 
     public LiveData<PagedList<FilmixMovie>> getAllMovies(PagedList.Config config) {
         DataSource.Factory<Integer, FilmixMovie> factory = movieDao.getAllMoviesPaged();
+        return new LivePagedListBuilder<>(factory, config).setBoundaryCallback(boundaryCallback).build();
+    }
+
+    public LiveData<PagedList<FilmixMovie>> getMoviesForGenre(PagedList.Config config, int genreId) {
+        DataSource.Factory<Integer, FilmixMovie> factory = movieGenreDao.getMoviesForGenrePagged(genreId);
         return new LivePagedListBuilder<>(factory, config).build();
     }
 
-    public LiveData<FilmixMovie> getCurrMovie(int id){
+    public LiveData<PagedList<FilmixMovie>> getMoviesForGenre(PagedList.Config config, String rawQuery) {
+        SupportSQLiteQuery rawQ = new SimpleSQLiteQuery(rawQuery);
+
+        DataSource.Factory<Integer, FilmixMovie> factory = movieGenreDao.getMoviesForGenrePagged(rawQ);
+        return new LivePagedListBuilder<>(factory, config).build();
+    }
+
+//    public LiveData<List<FilmixMovie>> getMoviesForGenre(String rawQuery) {
+//        SupportSQLiteQuery rawQ = new SimpleSQLiteQuery(rawQuery);
+//
+//        return movieGenreDao.getMoviesForGenrePagged(rawQ);
+//
+//    }
+
+    public LiveData<FilmixMovie> getCurrMovie(int id) {
         MediatorLiveData<FilmixMovie> filmixMovieMediatorLiveData = new MediatorLiveData<>();
         filmixMovieMediatorLiveData.addSource(movieDao.load(id), new Observer<FilmixMovie>() {
             @Override public void onChanged(FilmixMovie filmixMovie) {
@@ -79,7 +111,7 @@ public class MovieRepository {
         return filmixMovieMediatorLiveData;
     }
 
-    public LiveData<FilmixMovie> currentMovie(int id){
+    public LiveData<FilmixMovie> currentMovie(int id) {
         return movieDao.load(id);
     }
 
@@ -94,10 +126,10 @@ public class MovieRepository {
         );
     }
 
-    public void addSomeDataFromServer() {
+    public void addSomeDataFromServer(String query) {
         executor.execute(() -> {
 
-            webservice.getNewMovies().enqueue(new Callback<List<FilmixMovie>>() {
+            webservice.getMovies(query).enqueue(new Callback<List<FilmixMovie>>() {
                 @Override
                 public void onResponse(Call<List<FilmixMovie>> call, Response<List<FilmixMovie>> response) {
                     Log.d("TAG", "DATA REFRESHED FROM NETWORK");
@@ -117,6 +149,7 @@ public class MovieRepository {
                                     }
                             );
                         }
+                        isUpdating = false;
                     }
                 }
 
@@ -232,6 +265,10 @@ public class MovieRepository {
 
     }
 
+    public Executor getExecutor() {
+        return executor;
+    }
+
     public void testGetPerson() {
         executor.execute(
                 () -> {
@@ -242,6 +279,10 @@ public class MovieRepository {
                 }
         );
 
+    }
+
+    public Genre getGenre(String genreName) {
+        return genreDao.getGenre(genreName);
     }
 
     private static class InsertMovieAsyncTask extends AsyncTask<FilmixMovie, Void, Void> {
@@ -256,6 +297,68 @@ public class MovieRepository {
             movieDao.save(movies[0]);
             return null;
         }
+    }
+
+    public LiveData<List<Genre>> getAllGenres() {
+        return genreDao.getAllGenres();
+    }
+
+    public void updateStateOfRemoteDB() {
+        executor.execute(
+                () -> {
+                    webservice.getStateOfRemoteDB().enqueue(new Callback<StateOfRemoteDB>() {
+                        @Override public void onResponse(Call<StateOfRemoteDB> call, Response<StateOfRemoteDB> response) {
+                            if (response.body() != null) {
+                                executor.execute(
+                                        () -> {
+                                            stateOfRemoteDBdao.save(response.body());
+                                        }
+                                );
+                            }
+                        }
+
+                        @Override public void onFailure(Call<StateOfRemoteDB> call, Throwable t) {
+
+                        }
+                    });
+                }
+        );
+    }
+
+    public void addSomeDataFromServer(String query,int start, int maxRows, PagingRequestHelper.RequestType type, PagingRequestHelper helper) {
+
+        helper.runIfNotRunning(type, callback ->
+                webservice.getNewMovies(query,start,maxRows).enqueue(new Callback<List<FilmixMovie>>() {
+                    @Override
+                    public void onResponse(Call<List<FilmixMovie>> call, Response<List<FilmixMovie>> response) {
+                        Log.d("TAG", "DATA REFRESHED FROM NETWORK");
+                        Toast.makeText(App.context, "Data refreshed from network !", Toast.LENGTH_LONG).show();
+
+                        List<FilmixMovie> listResponse = response.body();
+                        if (listResponse != null) {
+                            Log.d("MOVIES", listResponse.toString());
+                            for (FilmixMovie movie : listResponse) {
+                                executor.execute(() -> movieDao.save(movie));
+                                executor.execute(
+                                        () -> {
+                                            List<Integer> genreIds = movie.getGenresId();
+                                            List<Genre> genresOfFilms = new ArrayList<>();
+                                            // TODO: 25.05.2019 Live Data observer for Genres
+                                            saveGenresForEntity(movie, genreIds, genresOfFilms, new MovieGenreJoin(0, 0));
+                                        }
+                                );
+                            }
+                            callback.recordSuccess();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<FilmixMovie>> call, Throwable t) {
+                        Log.d("MOVIES_ERROR", call.toString());
+                        callback.recordFailure(t);
+                    }
+                })
+        );
     }
 
 }

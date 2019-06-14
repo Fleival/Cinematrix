@@ -64,6 +64,20 @@ public class JTestingModule {
         return database.movieGenreDao();
     }
 
+    @Provides
+    @Singleton
+    StateOfLocalDBdao provideStateOfLocalDBdao(MovieDatabase database) {
+        return database.stateOfLocalDBdao();
+    }
+
+
+    @Provides
+    @Singleton
+    StateOfRemoteDBdao provideStateOfRemoteDBdao(MovieDatabase database) {
+        return database.stateOfRemoteDBdao();
+    }
+
+
     // --- REPOSITORY INJECTION ---
 
     @Provides
@@ -79,6 +93,8 @@ public class JTestingModule {
             GenreDao genreDao,
             PersonGenreDao personGenreDao,
             MovieGenreDao movieGenreDao,
+            StateOfRemoteDBdao stateOfRemoteDBdao,
+            StateOfLocalDBdao stateOfLocalDBdao,
             MovieWebService webservice,
             Executor executor) {
 
@@ -88,6 +104,8 @@ public class JTestingModule {
                 genreDao,
                 personGenreDao,
                 movieGenreDao,
+                stateOfRemoteDBdao,
+                stateOfLocalDBdao,
                 webservice,
                 executor);
     }

@@ -27,4 +27,7 @@ public interface GenreDao {
     @Query("SELECT * FROM genre WHERE id = :id")
     Genre getGenre(int id);
 
+    @Query("SELECT * FROM genre WHERE name = :name")
+    Genre getGenre(String name);
+
 }

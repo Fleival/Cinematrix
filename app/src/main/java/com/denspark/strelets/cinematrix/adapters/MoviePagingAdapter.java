@@ -90,6 +90,7 @@ public class MoviePagingAdapter extends PagedListAdapter<FilmixMovie, MoviePagin
                                 oldItem.getDuration().equals(newItem.getDuration());
                     }
                     return false;
+//                    return oldItem.getId() == (newItem.getId());
                 }
             };
 

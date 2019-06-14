@@ -35,7 +35,7 @@ public interface MovieDao {
     @Query("SELECT * FROM movie")
     LiveData<List<FilmixMovie>> getAllMovies();
 
-    @Query("SELECT * FROM movie ORDER BY uploadDate DESC")
+    @Query("SELECT * FROM movie")
     DataSource.Factory<Integer, FilmixMovie> getAllMoviesPaged();
 
 }
