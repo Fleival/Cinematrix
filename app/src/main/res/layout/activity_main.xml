@@ -35,7 +35,7 @@
                 android:background="@color/colorPrimaryDarker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:translationY="110dp">
+                tools:translationY="144dp">
 
             <RelativeLayout
                     android:layout_width="wrap_content"
@@ -118,6 +118,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="?android:attr/listDivider"/>
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp">
+
+                <Button android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/apply"
+                        android:id="@+id/apply_filter_btn"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="36dp"/>
+
+                <Button android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/clear"
+                        android:id="@+id/clear_filter_btn"
+                        android:layout_alignParentEnd="true"
+                android:layout_marginEnd="36dp"/>
+
+            </RelativeLayout>
         </LinearLayout>
 
 
@@ -187,7 +206,6 @@
         </com.google.android.material.appbar.AppBarLayout>
 
 
-
         <!--        <fragment-->
         <!--                android:id="@+id/for_test_purpose"-->
         <!--                android:layout_width="0dp"-->
@@ -197,7 +215,6 @@
         <!--                app:layout_constraintStart_toStartOf="@+id/appBarLayout"-->
         <!--                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"-->
         <!--                tools:layout="@layout/explore_fragment"/>-->
-
 
 
         <ImageView
