@@ -15,7 +15,7 @@ import com.denspark.strelets.cinematrix.database.entity.*;
         FilmixMovie.class,
         Person.class,
         Genre.class,
-        PersonGenreJoin.class,
+        PersonMoviesJoin.class,
         MovieGenreJoin.class,
         StateOfRemoteDB.class,
         StateOfLocalDB.class
@@ -35,7 +35,7 @@ public abstract class MovieDatabase extends RoomDatabase {
 
     public abstract GenreDao genreDao();
 
-    public abstract PersonGenreDao personGenreDao();
+    public abstract PersonMovieDao personGenreDao();
 
     public abstract MovieGenreDao movieGenreDao();
 

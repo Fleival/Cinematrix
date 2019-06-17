@@ -1,6 +1,5 @@
 package com.denspark.strelets.cinematrix.di.module;
 
-import android.app.Application;
 import android.content.Context;
 import com.denspark.strelets.cinematrix.api.MovieWebService;
 import com.denspark.strelets.cinematrix.database.MovieDatabase;
@@ -42,7 +41,7 @@ public class JTestingModule {
 
     @Provides
     @Singleton
-    PersonGenreDao providePersonGenreDao(MovieDatabase database) {
+    PersonMovieDao providePersonGenreDao(MovieDatabase database) {
         return database.personGenreDao();
     }
 
@@ -91,7 +90,7 @@ public class JTestingModule {
             MovieDao movieDao,
             PersonDao personDao,
             GenreDao genreDao,
-            PersonGenreDao personGenreDao,
+            PersonMovieDao personMovieDao,
             MovieGenreDao movieGenreDao,
             StateOfRemoteDBdao stateOfRemoteDBdao,
             StateOfLocalDBdao stateOfLocalDBdao,
@@ -102,7 +101,7 @@ public class JTestingModule {
                 movieDao,
                 personDao,
                 genreDao,
-                personGenreDao,
+                personMovieDao,
                 movieGenreDao,
                 stateOfRemoteDBdao,
                 stateOfLocalDBdao,

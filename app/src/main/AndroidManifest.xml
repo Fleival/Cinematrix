@@ -20,8 +20,8 @@
         <uses-library android:name="android.test.runner"
                       android:required="false" />
 
-        <activity android:name=".activities.PlayerActivity">
-        </activity>
+        <activity android:name=".activities.PlayerActivity"
+                  android:theme="@style/AppTheme.NoActionBar"/>
         <activity
                 android:name=".activities.MovieActivity"
                 android:label="@string/title_activity_movie"

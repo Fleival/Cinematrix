@@ -2,19 +2,20 @@ package com.denspark.strelets.cinematrix.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -23,8 +24,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.denspark.strelets.cinematrix.R;
+import com.denspark.strelets.cinematrix.adapters.ActorsInMovieRvAdapter;
 import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.database.entity.Genre;
+import com.denspark.strelets.cinematrix.database.entity.Person;
 import com.denspark.strelets.cinematrix.glide.GlideApp;
 import com.denspark.strelets.cinematrix.not_for_production.HttpController;
 import com.denspark.strelets.cinematrix.utils.DimensionUtils;
@@ -35,10 +38,13 @@ import jp.wasabeef.glide.transformations.CropTransformation;
 import jp.wasabeef.glide.transformations.SupportRSBlurTransformation;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import static java.util.Comparator.*;
 
 public class MovieActivity extends AppCompatActivity {
 
@@ -54,6 +60,8 @@ public class MovieActivity extends AppCompatActivity {
             "com.denspark.strelets.cinematrix.activities.movie.EXTRA_ID";
 
     public static final String EXTRA_POSTER_URL = "com.denspark.strelets.cinematrix.activities.movie.EXTRA_POSTER_URL";
+
+    private ActorsInMovieRvAdapter actorsAdapter;
 
     String referer;
     String URL;
@@ -95,6 +103,9 @@ public class MovieActivity extends AppCompatActivity {
     @BindView(R.id.play_btn)
     Button playButton;
 
+    @BindView(R.id.actors_rec_view)
+    RecyclerView actorsRecyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +135,10 @@ public class MovieActivity extends AppCompatActivity {
                 playButton.setEnabled(true);
             }
         });
+
+        actorsAdapter = new ActorsInMovieRvAdapter();
+        actorsRecyclerView.setAdapter(actorsAdapter);
+
     }
 
     @Override public boolean onSupportNavigateUp() {
@@ -168,6 +183,17 @@ public class MovieActivity extends AppCompatActivity {
 
             }
         });
+
+        movieViewModel.getActorsForMovie(id).observe(this, new Observer<List<Person>>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override public void onChanged(List<Person> people) {
+                people.sort(nullsFirst(
+                        comparing(Person::getPhotoUrl, nullsLast(naturalOrder()))
+                ));
+                actorsAdapter.submitList(people);
+            }
+        });
+
     }
 
     private void setMovieActivityData(FilmixMovie movie) {

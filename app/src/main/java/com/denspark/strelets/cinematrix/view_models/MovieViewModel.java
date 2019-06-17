@@ -8,6 +8,7 @@ import androidx.paging.PagedList;
 import com.denspark.strelets.cinematrix.app.Constants;
 import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.database.entity.Genre;
+import com.denspark.strelets.cinematrix.database.entity.Person;
 import com.denspark.strelets.cinematrix.repository.MovieRepository;
 
 import javax.inject.Inject;
@@ -143,11 +144,14 @@ public class MovieViewModel extends ViewModel {
     }
 
     public void testDB() {
-        repository.testGetPerson();
+//        repository.testGetPerson();
     }
 
     public void updateStateOfRemoteDB(){
         repository.updateStateOfRemoteDB();
     }
 
+    public LiveData<List<Person>> getActorsForMovie(int movieId){
+        return repository.getActorsForMovie(movieId);
+    }
 }

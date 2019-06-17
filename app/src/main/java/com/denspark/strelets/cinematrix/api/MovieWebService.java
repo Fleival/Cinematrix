@@ -29,6 +29,9 @@ public interface MovieWebService {
     @GET("/test_spring/genre/{id}")
     Call<Genre> getGenreByIdRemote(@Path("id") int genreId);
 
+    @GET("/test_spring/person/{id}")
+    Call<Person> getPersonByIdRemote(@Path("id") int personId);
+
     @GET("/test_spring/get_db_state")
     Call<StateOfRemoteDB> getStateOfRemoteDB();
 

@@ -1,12 +1,9 @@
 package com.denspark.strelets.cinematrix.di.module;
 
 import android.app.Application;
-import androidx.room.Room;
 import com.denspark.strelets.cinematrix.api.MovieWebService;
 import com.denspark.strelets.cinematrix.database.MovieDatabase;
 import com.denspark.strelets.cinematrix.database.dao.*;
-import com.denspark.strelets.cinematrix.database.entity.Genre;
-import com.denspark.strelets.cinematrix.database.entity.StateOfRemoteDB;
 import com.denspark.strelets.cinematrix.repository.MovieRepository;
 import com.google.gson.*;
 import dagger.Module;
@@ -46,7 +43,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    PersonGenreDao providePersonGenreDao(MovieDatabase database) {
+    PersonMovieDao providePersonGenreDao(MovieDatabase database) {
         return database.personGenreDao();
     }
 
@@ -94,7 +91,7 @@ public class AppModule {
             MovieDao movieDao,
             PersonDao personDao,
             GenreDao genreDao,
-            PersonGenreDao personGenreDao,
+            PersonMovieDao personMovieDao,
             MovieGenreDao movieGenreDao,
             StateOfRemoteDBdao stateOfRemoteDBdao,
             StateOfLocalDBdao stateOfLocalDBdao,
@@ -105,7 +102,7 @@ public class AppModule {
                 movieDao,
                 personDao,
                 genreDao,
-                personGenreDao,
+                personMovieDao,
                 movieGenreDao,
                 stateOfRemoteDBdao,
                 stateOfLocalDBdao,

@@ -36,7 +36,7 @@ public class MovieRepository {
     private final MovieDao movieDao;
     private final PersonDao personDao;
     private final GenreDao genreDao;
-    private final PersonGenreDao personGenreDao;
+    private final PersonMovieDao personMovieDao;
     private final MovieGenreDao movieGenreDao;
     private final StateOfRemoteDBdao stateOfRemoteDBdao;
     private final StateOfLocalDBdao stateOfLocalDBdao;
@@ -49,7 +49,7 @@ public class MovieRepository {
             MovieDao movieDao,
             PersonDao personDao,
             GenreDao genreDao,
-            PersonGenreDao personGenreDao,
+            PersonMovieDao personMovieDao,
             MovieGenreDao movieGenreDao,
             StateOfRemoteDBdao stateOfRemoteDBdao,
             StateOfLocalDBdao stateOfLocalDBdao,
@@ -59,7 +59,7 @@ public class MovieRepository {
         this.movieDao = movieDao;
         this.personDao = personDao;
         this.genreDao = genreDao;
-        this.personGenreDao = personGenreDao;
+        this.personMovieDao = personMovieDao;
         this.movieGenreDao = movieGenreDao;
         this.stateOfRemoteDBdao = stateOfRemoteDBdao;
         this.stateOfLocalDBdao = stateOfLocalDBdao;
@@ -178,7 +178,7 @@ public class MovieRepository {
                                 List<Integer> genreIds = person.getFilmsGenresId();
                                 List<Genre> genresOfFilms = new ArrayList<>();
                                 // TODO: 25.05.2019 Live Data observer for Genres
-                                saveGenresForEntity(person, genreIds, genresOfFilms, new PersonGenreJoin(0, 0));
+                                saveGenresForEntity(person, genreIds, genresOfFilms, new PersonMoviesJoin(0, 0));
                             }
                     );
                 }
@@ -202,8 +202,8 @@ public class MovieRepository {
             Genre genre = genreDao.getGenre(genreId);
             if (genre != null) {
                 savedGenreList.add(genre);
-                if (joinEntity.getClass().isAssignableFrom(PersonGenreJoin.class)) {
-                    personGenreDao.insert(new PersonGenreJoin(personOrMovie.getId(), genreId));
+                if (joinEntity.getClass().isAssignableFrom(PersonMoviesJoin.class)) {
+                    personMovieDao.insert(new PersonMoviesJoin(personOrMovie.getId(), genreId));
                 } else if (joinEntity.getClass().isAssignableFrom(MovieGenreJoin.class)) {
                     movieGenreDao.insert(new MovieGenreJoin(personOrMovie.getId(), genreId));
 
@@ -219,8 +219,8 @@ public class MovieRepository {
                                                     genreDao.save(response.body());
                                                     Genre genre_1 = genreDao.getGenre(genreId);
                                                     savedGenreList.add(genre_1);
-                                                    if (joinEntity.getClass().isAssignableFrom(PersonGenreJoin.class)) {
-                                                        personGenreDao.insert(new PersonGenreJoin(personOrMovie.getId(), genreId));
+                                                    if (joinEntity.getClass().isAssignableFrom(PersonMoviesJoin.class)) {
+                                                        personMovieDao.insert(new PersonMoviesJoin(personOrMovie.getId(), genreId));
                                                     } else if (joinEntity.getClass().isAssignableFrom(MovieGenreJoin.class)) {
                                                         movieGenreDao.insert(new MovieGenreJoin(personOrMovie.getId(), genreId));
 
@@ -231,6 +231,45 @@ public class MovieRepository {
                                 }
 
                                 @Override public void onFailure(Call<Genre> call, Throwable t) {
+                                }
+                            });
+                        }
+                );
+            }
+        }
+    }
+
+    private void saveActorsForMovie(
+            ContainerEntity personOrMovie,
+            List<Integer> personIds,
+            List<Person> savedPersonList,
+            JoinEntity joinEntity) {
+
+        for (Integer personId : personIds) {
+            Person person = personDao.getPerson(personId);
+            if (person != null) {
+                savedPersonList.add(person);
+                personMovieDao.insert(new PersonMoviesJoin(personId, personOrMovie.getId()));
+            } else {
+                executor.execute(
+                        () -> {
+                            webservice.getPersonByIdRemote(personId).enqueue(new Callback<Person>() {
+                                @Override public void onResponse(Call<Person> call, Response<Person> response) {
+                                    if (response.body() != null) {
+                                        executor.execute(
+                                                () -> {
+                                                    personDao.save(response.body());
+                                                    Person actor = personDao.getPerson(personId);
+                                                    savedPersonList.add(actor);
+                                                    personMovieDao.insert(
+                                                            new PersonMoviesJoin(personId, personOrMovie.getId())
+                                                    );
+                                                }
+                                        );
+                                    }
+                                }
+
+                                @Override public void onFailure(Call<Person> call, Throwable t) {
                                 }
                             });
                         }
@@ -269,17 +308,18 @@ public class MovieRepository {
         return executor;
     }
 
-    public void testGetPerson() {
-        executor.execute(
-                () -> {
-                    int id = 110;
-                    Person p = personDao.getPerson(id);
-                    p.setFilmsGenres(personGenreDao.getGenresForPerson(id));
-                    Log.d("TAG", "Db test success" + p);
-                }
-        );
 
-    }
+    // TODO: 17.06.2019 refactor to genre for person
+//    public void testGetPerson() {
+//        executor.execute(
+//                () -> {
+//                    int id = 110;
+//                    Person p = personDao.getPerson(id);
+//                    p.setFilmsGenres(personMovieDao.getGenresForPerson(id));
+//                    Log.d("TAG", "Db test success" + p);
+//                }
+//        );
+//    }
 
     public Genre getGenre(String genreName) {
         return genreDao.getGenre(genreName);
@@ -325,10 +365,10 @@ public class MovieRepository {
         );
     }
 
-    public void addSomeDataFromServer(String query,int start, int maxRows, PagingRequestHelper.RequestType type, PagingRequestHelper helper) {
+    public void addSomeDataFromServer(String query, int start, int maxRows, PagingRequestHelper.RequestType type, PagingRequestHelper helper) {
 
         helper.runIfNotRunning(type, callback ->
-                webservice.getNewMovies(query,start,maxRows).enqueue(new Callback<List<FilmixMovie>>() {
+                webservice.getNewMovies(query, start, maxRows).enqueue(new Callback<List<FilmixMovie>>() {
                     @Override
                     public void onResponse(Call<List<FilmixMovie>> call, Response<List<FilmixMovie>> response) {
                         Log.d("TAG", "DATA REFRESHED FROM NETWORK");
@@ -342,9 +382,12 @@ public class MovieRepository {
                                 executor.execute(
                                         () -> {
                                             List<Integer> genreIds = movie.getGenresId();
+                                            List<Integer> actorIds = movie.getActorsId();
                                             List<Genre> genresOfFilms = new ArrayList<>();
+                                            List<Person> actorsInFilm = new ArrayList<>();
                                             // TODO: 25.05.2019 Live Data observer for Genres
                                             saveGenresForEntity(movie, genreIds, genresOfFilms, new MovieGenreJoin(0, 0));
+                                            saveActorsForMovie(movie,actorIds,actorsInFilm,new PersonMoviesJoin(0, 0));
                                         }
                                 );
                             }
@@ -359,6 +402,11 @@ public class MovieRepository {
                     }
                 })
         );
+    }
+
+
+    public LiveData<List<Person>> getActorsForMovie(int movieId){
+     return personMovieDao.getPersonsForMovies(movieId);
     }
 
 }

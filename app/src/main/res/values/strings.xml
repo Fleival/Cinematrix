@@ -7,4 +7,16 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="apply">Apply</string>
     <string name="clear">Clear</string>
+    <string name="explore">Explore</string>
+    <string name="category">Category</string>
+    <string name="my_profile">My profile</string>
+    <string name="favorite">Favorite</string>
+    <string name="Year">Год:</string>
+    <string name="Country">Страна:</string>
+    <string name="Genre">Жанр:</string>
+    <string name="Description">Описание:</string>
+    <string name="Quality">Качество:</string>
+    <string name="Duration">Продолжительность:</string>
+    <string name="Translation">Перевод:</string>
+    <string name="watch">Watch</string>
 </resources>

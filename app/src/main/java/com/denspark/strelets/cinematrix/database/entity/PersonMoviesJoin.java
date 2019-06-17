@@ -5,22 +5,22 @@ import androidx.room.ForeignKey;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity(tableName = "person_genre_join",
-        primaryKeys = {"personId", "genreId"},
+@Entity(tableName = "person_movie_join",
+        primaryKeys = {"personId", "movieId"},
         foreignKeys = {
                 @ForeignKey(entity = Person.class,
                         parentColumns = "id",
                         childColumns = "personId"),
-                @ForeignKey(entity = Genre.class,
+                @ForeignKey(entity = FilmixMovie.class,
                         parentColumns = "id",
-                        childColumns = "genreId")
+                        childColumns = "movieId")
         })
-public class PersonGenreJoin implements JoinEntity {
+public class PersonMoviesJoin implements JoinEntity {
     @Getter @Setter private int  personId;
-    @Getter @Setter private int  genreId;
+    @Getter @Setter private int  movieId;
 
-    public PersonGenreJoin(int personId, int  genreId){
+    public PersonMoviesJoin(int personId, int  movieId){
         this.personId = personId;
-        this.genreId = genreId;
+        this.movieId = movieId;
     }
 }
