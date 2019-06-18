@@ -164,6 +164,19 @@
                   android:layout_marginEnd="4dp"
                   app:layout_constraintEnd_toEndOf="parent"/>
 
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/movie_title_textColor"
+                android:text="@string/actrors_label"
+                android:textSize="14sp"
+                android:fontFamily="@font/roboto_black"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movie_quality_label"
+                android:id="@+id/movie_actors_label"/>
+
         <RelativeLayout
                 android:id="@+id/actors_container"
                 android:layout_width="0dp"
@@ -171,7 +184,7 @@
                 android:background="@drawable/actors_plate"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/movie_quality_label"
+                app:layout_constraintTop_toBottomOf="@+id/movie_actors_label"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="8dp"
