@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 import static java.util.Comparator.*;
 
@@ -187,10 +188,21 @@ public class MovieActivity extends AppCompatActivity {
         movieViewModel.getActorsForMovie(id).observe(this, new Observer<List<Person>>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override public void onChanged(List<Person> people) {
-                people.sort(nullsFirst(
+                List<Person>actors = people.stream().map(
+                        person -> {
+                            String photoUrl = person.getPhotoUrl();
+                            if (photoUrl != null) {
+                                if (photoUrl.contains("none")) {
+                                    person.setPhotoUrl(null);
+                                }
+                            }
+                            return person;
+                        }
+                ).collect(Collectors.toList());
+                actors.sort(nullsFirst(
                         comparing(Person::getPhotoUrl, nullsLast(naturalOrder()))
                 ));
-                actorsAdapter.submitList(people);
+                actorsAdapter.submitList(actors);
             }
         });
 

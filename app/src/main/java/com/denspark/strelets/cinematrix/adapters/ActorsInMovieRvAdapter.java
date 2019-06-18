@@ -1,6 +1,7 @@
 package com.denspark.strelets.cinematrix.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.denspark.strelets.cinematrix.R;
 import com.denspark.strelets.cinematrix.database.entity.Person;
 import com.denspark.strelets.cinematrix.glide.GlideApp;
+import com.denspark.strelets.cinematrix.utils.DimensionUtils;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import jp.wasabeef.glide.transformations.SupportRSBlurTransformation;
 
 public class ActorsInMovieRvAdapter extends ListAdapter<Person, ActorsInMovieRvAdapter.PersonHolder> {
     private static final DiffUtil.ItemCallback<Person> DIFF_CALLBACK =
@@ -61,9 +69,15 @@ public class ActorsInMovieRvAdapter extends ListAdapter<Person, ActorsInMovieRvA
 
         holder.actorName.setText(currentPerson.getName());
 
+        MultiTransformation<Bitmap> bitmapMultiTransformation =
+                new MultiTransformation<>(
+                        new CircleCrop()
+                );
+
         GlideApp.with(context)
                 .asBitmap()
                 .load(currentPerson.getPhotoUrl())
+                .transform(bitmapMultiTransformation)
                 .into(holder.actorPhoto);
 
     }

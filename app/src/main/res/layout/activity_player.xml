@@ -9,6 +9,7 @@
 
 
     <com.google.android.exoplayer2.ui.PlayerView
+            app:shutter_background_color="@android:color/transparent"
             android:id="@+id/ep_video_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
