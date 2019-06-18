@@ -1,6 +1,6 @@
 # **CINEMATRIX**
 
-## This is my pet-project for learning purpose but in plan I will retrofit it to real.
+## This is my pet-project for learning purpose but in future I will retrofit it to real.
 
 * application uses clean architecture implementing the MVVM pattern together
 with Dagger;
