@@ -29,6 +29,6 @@ Cinematrix OVERRIDE VERSION
     android:textAlignment="inherit"
     android:textSize="16sp"
     android:paddingStart="16dp"
-    android:fontFamily="@font/roboto_thin"
+    android:fontFamily="@font/roboto_medium"
     tools:text="hello spinner"
     />

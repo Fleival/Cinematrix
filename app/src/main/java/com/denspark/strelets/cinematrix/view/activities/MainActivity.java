@@ -1,6 +1,7 @@
 package com.denspark.strelets.cinematrix.view.activities;
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,6 +33,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 
@@ -58,20 +61,24 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.support.HasSupportFragmentInjector;
+import dagger.android.HasAndroidInjector;
 
-public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector {
+public class MainActivity extends AppCompatActivity implements HasAndroidInjector {
 
     private static final String TAG = "MainActivity";
 
     @Inject
-    DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
+    DispatchingAndroidInjector<Object> dispatchingAndroidInjector;
 
     private static final int EXPLORE_BTN = 0;
     private static final int CAT_BTN = 1;
     private static final int FAV_BTN = 2;
     private static final int PROF_BTN = 3;
+
+    private static final int SEARCH_ICON_SHOW_MAGNEFIER = 0;
+    private static final int SEARCH_ICON_SHOW_CROSS = 1;
 
     boolean isUp;
     int flag = 0;
@@ -139,8 +146,9 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     List<Fragment> fragments = new ArrayList<>();
 
+
     @Override
-    public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
+    public AndroidInjector<Object> androidInjector() {
         return dispatchingAndroidInjector;
     }
 
@@ -176,7 +184,12 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         searchAnimIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeState();
+                if (flag == SEARCH_ICON_SHOW_CROSS) {
+                    searchEtField.setText("");
+                    searchEtField.clearFocus();
+                    closeKeyboard();
+                    changeState();
+                }
             }
         });
 
@@ -275,7 +288,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         searchEtField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                if(count==0){
+                    flag = SEARCH_ICON_SHOW_MAGNEFIER;
+                    changeState();
+                }
             }
 
             @Override
@@ -312,13 +328,16 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
             @Override
             public void afterTextChanged(Editable s) {
-                flag = 0;
-                changeState();
-
             }
         });
+    }
 
-//        searchEtField.setText("вр");
+    private void closeKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 
@@ -459,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     private void configureViewModel() {
-        movieViewModel = ViewModelProviders.of(this, viewModelFactory)
+        movieViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(MovieViewModel.class);
 
         movieViewModel.loadAllGenres();
@@ -591,16 +610,17 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
 
     private void changeState() {
-        if (flag == 0) {
+        if (flag == SEARCH_ICON_SHOW_MAGNEFIER) {
             searchAnimIcon.setSpeed(1.75f);
             searchAnimIcon.playAnimation();
-            flag = 1;
+            flag = SEARCH_ICON_SHOW_CROSS;
         }else {
             searchAnimIcon.setSpeed(-1.75f);
             searchAnimIcon.playAnimation();
-            flag = 0;
+            flag = SEARCH_ICON_SHOW_MAGNEFIER;
         }
 
     }
+
 
 }

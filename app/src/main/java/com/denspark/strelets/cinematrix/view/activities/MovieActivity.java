@@ -24,6 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProvider.Factory;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -192,7 +193,7 @@ public class MovieActivity extends AppCompatActivity implements ActorClickListen
     }
 
     private void configureViewModel(int id, boolean isOnlineMode) {
-        this.movieViewModel = ViewModelProviders.of(this, viewModelFactory).get(MovieViewModel.class);
+        this.movieViewModel = new ViewModelProvider(this, viewModelFactory).get(MovieViewModel.class);
         if (!isOnlineMode) {
             this.movieViewModel.getCurrentMovie(id).observe(this, new Observer<FilmixMovie>() {
                 public void onChanged(FilmixMovie filmixMovie) {

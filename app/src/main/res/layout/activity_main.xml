@@ -125,7 +125,7 @@
                 <Button android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/apply"
-                        android:fontFamily="@font/roboto_light"
+                        android:fontFamily="@font/roboto_medium"
                         android:id="@+id/apply_filter_btn"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="36dp"/>
@@ -133,7 +133,7 @@
                 <Button android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/clear"
-                        android:fontFamily="@font/roboto_light"
+                        android:fontFamily="@font/roboto_medium"
                         android:id="@+id/clear_filter_btn"
                         android:layout_alignParentEnd="true"
                 android:layout_marginEnd="36dp"/>
@@ -172,13 +172,13 @@
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="64dp"
                             android:background="@drawable/edit_text_bg_selector"
-                            android:hint="search movie"
+                            android:hint="поиск фильма"
                         android:textColorHint="@color/color_text_gray"
                             android:paddingStart="8dp"
                             android:singleLine="true"
                             android:textSize="16sp"
                             android:textColor="@color/color_text_white"
-                            android:fontFamily="@font/roboto_thin"
+                            android:fontFamily="@font/roboto_light"
                             tools:text="Sample"/>
 
 

@@ -24,7 +24,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:textSize="16sp"
-            android:fontFamily="@font/roboto_thin"
+            android:fontFamily="@font/roboto_medium"
             app:layout_constraintStart_toEndOf="@id/checkbox"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

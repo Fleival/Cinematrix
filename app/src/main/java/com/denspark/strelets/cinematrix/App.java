@@ -8,13 +8,14 @@ import com.denspark.strelets.cinematrix.di.components.DaggerAppComponent;
 
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
+import dagger.android.HasAndroidInjector;
 
-public class App extends Application implements HasActivityInjector {
+public class App extends Application implements HasAndroidInjector {
 
     @Inject
-    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
+    DispatchingAndroidInjector<Object> dispatchingAndroidInjector;
 
     public static Context context;
 
@@ -26,11 +27,12 @@ public class App extends Application implements HasActivityInjector {
     }
 
     @Override
-    public DispatchingAndroidInjector<Activity> activityInjector() {
+    public AndroidInjector<Object> androidInjector() {
         return dispatchingAndroidInjector;
     }
 
     private void initDagger(){
         DaggerAppComponent.builder().application(this).build().inject(this);
     }
+
 }
