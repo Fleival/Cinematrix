@@ -1,8 +1,10 @@
 package com.denspark.strelets.cinematrix.not_for_production;
 
 import android.text.TextUtils;
+
 import com.github.code.Itertools;
-import org.apache.commons.codec.binary.Base64;
+import com.migcomponents.migbase64.Base64;
+
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -14,14 +16,15 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class FilmixDecoder {
-    Base64 base64 =new Base64();
+    private static final String TAG = "FilmixDecoder";
+    org.apache.commons.codec.binary.Base64 base64 = new org.apache.commons.codec.binary.Base64();
 
 
     public static void main(String[] args) {
         FilmixDecoder decoder = new FilmixDecoder();
         String s_1 = "NW4dzGVfQcEXOCRnamRnyGAJO7AfzM6nB7zRy7akgiseac4jBjwUOGLdaHBdgjohOGlUa7AMam1VgF6cyC1wND1MQouhgbXhzi1=Q7sUy7zpLl4SN5ApLogGQooQwk12QCUIQGLRyCn0Qi9UaArr";
 
-        String s_2 = "#2W3sidGl0bGUiOiIg0KHQtdC30L7QvSAxIiwiZm9sZGVyIjpbeyJ0aXRsZSI6ItCh0LXRgNC40Y8gMSAo0KHQtdC30L7QvSAxKSIsImlkIjoiczFlMSIsImZpbGUiOiJbMTA4MCBIRF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAxZTAxXzEwODAubXA0LFs0ODBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU//a2lub2NvdmVyLnc5OC5uamJo4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDFlMDFfNDgwLm1wNCxbNzIwcF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAxZTAxXzcyMC5tcDQifSx7InRpdGxlIjoi0KHQtdGA0LjRjyAyICjQodC10LfQvtC9IDEpIiwiaWQiOiJzMWUyIiwiZmlsZSI6IlsxMDgwIEhEXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDFlMDJfMTA4MC5tcDQsWzQ4MHBdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMWUwMl80ODAubXA0LFs3MjBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDFlMDJfNzIwLm1wNCJ9LHsidGl0bGUiOiLQodC10YDQuNGPIDMgKNCh0LXQt9C+0L0gMSkiLCJpZCI6InMxZTMiLCJmaWxlIjoiWzEwODAgSERdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMWUwM18xMDgwLm1wNCxbNDgwcF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAxZTAzXzQ4MC5tcDQsWzcyMHBdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMWUwM183MjAubXA0In0seyJ0aXRsZSI6ItCh0LXRgNC40Y8gNCAo0KHQtdC30L7QvSAxKSIsImlkIjoiczFlNCIsImZpbGUiOiJbMTA4MCBIRF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAxZTA0XzEwODAubXA0LFs0ODBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDFlMDRfNDgwLm1wNCxbNzIwcF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAxZTA0XzcyMC5tcDQifSx7InRpdGxlIjoi0KHQtdGA0LjRjyA1ICjQodC10LfQvtC9IDEpIiwiaWQiOiJzMWU1IiwiZmlsZSI6IlsxMDgwIEhEXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDFlMDVfMTA4MC5tcDQsWzQ4MHBdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMWUwNV80ODAubXA0LFs3MjBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDFlMDVfNzIwLm1wNCJ9LHsidGl0bGUiOiLQodC10YDQuNGPIDYgKNCh0LXQt9C+0L0gMSkiLCJpZCI6InMxZTYiLCJmaWxlIjoiWzEwODAgSERdaHR0cHM6Ly92czAuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMWUwNl8xMDgwLm1wNCxbNDgwcF1odHRwczovL3ZzMC5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAxZTA2XzQ4MC5tcDQsWzcyMHBdaHR0cHM6Ly92czAuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMWUwNl83MjAubXA0In0seyJ0aXRsZSI6ItCh0LXRgNC40Y8gNyAo0KHQtdC30L7QvSAxKSIsImlkIjoiczFlNyIsImZpbGUiOiJbMTA4MCBIRF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAxZTA3XzEwODAubXA0LFs0ODBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDFlMDdfNDgwLm1wNCxbNzIwcF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAxZTA3XzcyMC5tcDQifSx7InRpdGxlIjoi0KHQtdGA0LjRjyA4ICjQodC10LfQvtC9IDEpIiwiaWQiOiJzMWU4IiwiZmlsZSI6IlsxMDgwIEhEXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDFlMDhfMTA4MC5tcDQsWzQ4MHBdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMWUwOF80ODAubXA0LFs3MjBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDFlMDhfNzIwLm1wNCJ9XX0seyJ0aXRsZSI6IiDQodC10LfQvtC9IDIiLCJmb2xkZXIiOlt7InRpdGxlIjoi0KHQtdGA0LjRjyAxICjQodC10LfQvtC9IDIpIiwiaWQiOiJzMmUxIiwiZmlsZSI6IlsxMDgwIEhEXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDJlMDFfMTA4MC5tcDQsWzQ4MHBdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMmUwMV80ODAubXA0LFs3MjBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDJlMDFfNzIwLm1wNCJ9LHsidGl0bGUiOiLQodC10YDQuNGPIDIgKNCh0LXQt9C+0L0gMikiLCJpZCI6InMyZTIiLCJmaWxlIjoiWzEwODAgSERdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMmUwMl8xMDgwLm1wNCxbNDgwcF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAyZTAyXzQ4MC5tcDQsWzcyMHBdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMmUwMl83MjAubXA0In0seyJ0aXRsZSI6ItCh0LXRgNC40Y8gMyAo0KHQtdC30L7QvSAyKSIsImlkIjoiczJlMyIsImZpbGUiOiJbMTA4MCBIRF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAyZTAzXzEwODAubXA0LFs0ODBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDJlMDNfNDgwLm1wNCxbNzIwcF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAyZTAzXzcyMC5tcDQifSx7InRpdGxlIjoi0KHQtdGA0LjRjyA0ICjQodC10LfQvtC9IDIpIiwiaWQiOiJzMmU0IiwiZmlsZSI6IlsxMDgwIEhEXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDJlMDRfMTA4MC5tcDQsWzQ4MHBdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMmUwNF80ODAubXA0LFs3MjBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDJlMDRfNzIwLm1wNCJ9LHsidGl0bGUiOiLQodC10YDQuNGPIDUgKNCh0LXQt9C+0L0gMikiLCJpZCI6InMyZTUiLCJmaWxlIjoiWzEwODAgSERdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMmUwNV8xMDgwLm1wNCxbNDgwcF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAyZTA1XzQ4MC5tcDQsWzc//Y2VyY2EudHJvdmEuc2FnZ2V6emE=yMHBdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMmUwNV83MjAubXA0In0seyJ0aXRsZSI6ItCh0LXRgNC40Y8gNiAo0KHQtdC30L7QvSAyKSIsImlkIjoiczJlNiIsImZpbGUiOiJbMTA4MCBIRF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAyZTA2XzEwODAubXA0LFs0ODBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDJlMDZfNDgwLm1wNCxbNzIwcF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAyZTA2XzcyMC5tcDQifSx7InRpdGxlIjoi0KHQtdGA0LjRjyA3ICjQodC10LfQvtC9IDIpIiwiaWQiOiJzMmU3IiwiZmlsZSI6IlsxMDgwIEhEXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDJlMDdfMTA4MC5tcDQsWzQ4MHBdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMmUwN180ODAubXA0LFs3MjBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1Z//c2ljYXJpby4yMi5tb3ZpZXM=GMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDJlMDdfNzIwLm1wNCJ9LHsidGl0bGUiOiLQodC10YDQuNGPIDggKNCh0LXQt9C+0L0gMikiLCJpZCI6InMyZTgiLCJmaWxlIjoiWzEwODAgSERdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMmUwOF8xMDgwLm1wNCxbNDgwcF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAyZTA4XzQ4MC5tcDQsWzcyMHBdaHR0cHM6Ly92czEuY2RubGFzdC5jb20vcy8yNWY4ZWRmMjVkYzJlOGFhYWQ0OWM0NTgzZWU5NmZlNzUyMDU5ZS9IYXBweS0yMDE3LWxvc3RmaWxtL3MwMmUwOF83MjAubXA0In0seyJ0aXRsZSI6ItCh0LXRgNC40Y8gOSAo0KHQtdC30L7QvSAyKSIsImlkIjoiczJlOSIsImZpbGUiOiJbMTA4MCBIRF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAyZTA5XzEwODAubXA0LFs0ODBwXWh0dHBzOi8vdnMxLmNkbmxhc3QuY29tL3MvMjVmOGVkZjI1ZGMyZThhYWFkNDljNDU4M2VlOTZmZTc1MjA1OWUvSGFwcHktMjAxNy1sb3N0ZmlsbS9zMDJlMDlfNDgwLm1wNCxbNzIwcF1odHRwczovL3ZzMS5jZG5sYXN0LmNvbS9zLzI1ZjhlZGYyNWRjMmU4YWFhZDQ5YzQ1ODNlZTk2ZmU3NTIwNTllL0hhcHB5LTIwMTctbG9zdGZpbG0vczAyZTA5XzcyMC5tcDQifV19XQ==";
+        String s_2 = "#2W3sidGl0bGUiOiIg0KHQtdC30L7QvSAxIiwiZm9sZGVyIjpbeyJ0aXRsZSI6ItCh0LXRgNC40Y8gMSAo0KHQtdC30L7QvSAxKSIsImlkIjoiczFlMSIsImZpbGUiOiJbNDgwcF1odHRwczovL3ZzMC5jZG5sYXN0LmNvbS9zLzJlMzhmMzEyYzlkNGExZWQ0ZjYwZTZlODc1MGZkNDQ2ZDYxYTExL0pldXgtZGluZmx1ZW5jZS0yMDE4LUZyYS9zMDFlMDFfNDgwLm1wNCxbNzIwcF1odHRwczovL3ZzMC5jZG5sYXN0LmNvbS9zLzJlMzhmMzEyYzlkNGExZWQ0ZjYwZTZlODc1MGZkNDQ2ZDYxYTExL0pldXgtZGluZmx1ZW5jZS0yMDE4LUZyYS9zMDFlMDFfNzIwLm1wNCJ9LHsidGl0bGUiOiLQodC10YDQuNGPIDIgKNCh0LXQt9C+0L0gMSkiLCJpZCI6InMxZTIiLCJmaWxlIjoiWzQ4MHBdaHR0cHM6Ly92czAuY2RubGFzdC5jb20vcy8yZTM4ZjMxMmM5ZDRhMWVkNGY2MGU2ZTg3NTBmZDQ0NmQ2MWExMS9KZXV4LWRpbmZsdWVuY2UtMjAxOC1GcmEvczAxZTAyXzQ4MC5tcDQsWzcy//c2ljYXJpby4yMi5tb3ZpZXM=MHBdaHR0cHM6Ly92czAuY2RubGFzdC5jb20vcy8yZTM4ZjMxMmM5ZDRhMWVkNGY2MGU2ZTg3NTBmZDQ0NmQ2MWExMS9KZXV4LWRpbmZsdWVuY2UtMjAxOC1GcmEvczAxZTAyXzcyMC5tcDQifSx7InRpdGxlIjoi0KHQtdGA0LjRjyAzICjQodC10LfQvtC9IDEpIiwiaWQiOiJzMWUzIiwiZmlsZSI6Ils0ODBwXWh0dHBzOi8vdnMwLmNkbmxhc3QuY29tL3MvMmUzOGYzMTJjOWQ0YTFlZDRmNjBlNmU4NzUwZmQ0NDZkNjFhMTEvSmV1eC1kaW5mbHVlbmNlLTIwMTgtRnJhL3MwMWUwM180ODAubXA0LFs3MjBwXWh0dHBzOi8vdnMwLmNkbmxhc3QuY29tL3MvMmUzOGYzMTJjOW//a2lub2NvdmVyLnc5OC5uamJoQ0YTFlZDRmNjBlNmU4NzUwZmQ0NDZkNjFhMTEvSmV1eC1kaW5mbHVlbmNlLTIwMTgtRnJhL3MwMWUwM183MjAubXA0In0seyJ0aXRsZSI6ItCh0LXRgNC40Y8gNCAo0KHQtdC30L7QvSAxKSIsImlkIjoiczFlNCIsImZpbGUiOiJbNDgwcF1odHRwczovL3ZzMi5jZG5sYXN0LmNvbS9zLzJlMzhmMzEyYzlkNGExZWQ0ZjYwZTZlODc1MGZkNDQ2ZDYxYTExL0pldXgtZGluZmx1ZW5jZS0yMDE4LUZyYS9zMDFlMDRfNDgwLm1wNCxbNzIwcF1odHRwczovL3ZzMi5jZG5sYXN0LmNvbS9zLzJlMzhmMzEyYzlkNGExZWQ0ZjYwZTZlODc1MGZkNDQ2ZDYxYTExL0pldXgtZGluZmx1ZW5jZS0yMDE4LUZyYS9zMDFlMD//Y2VyY2EudHJvdmEuc2FnZ2V6emE=RfNzIwLm1wNCJ9LHsidGl0bGUiOiLQodC10YDQuNGPIDUgKNCh0LXQt9C+0L0gMSkiLCJpZCI6InMxZTUiLCJmaWxlIjoiWzQ4MHBdaHR0cHM6Ly92czIuY2RubGFzdC5jb20vcy8yZTM4ZjMxMmM5ZDRhMWVkNGY2MGU2ZTg3NTBmZDQ0NmQ2MWExMS9KZXV4LWRpbmZsdWVuY2UtMjAxOC1GcmEvczAxZTA1XzQ4MC5tcDQsWzcyMHBdaHR0cHM6Ly92czIuY2RubGFzdC5jb20vcy8yZTM4ZjMxMmM5ZDRhMWVkNGY2MGU2ZTg3NTBmZDQ0NmQ2MWExMS9KZXV4LWRpbmZsdWVuY2UtMjAxOC1GcmEvczAxZTA1XzcyMC5tcDQifSx7InRpdGxlIjoi0KHQtdGA0LjRjyA2ICjQodC10LfQvtC9IDEpIiwiaWQiOiJzMWU2IiwiZmlsZSI6Ils0ODBwXWh0dHBzOi8vdnMyLmNkbmxhc3QuY29tL3MvMmUzOGYzMTJjOWQ0YTFlZDRmNjBlNmU4NzUwZmQ0NDZkNjFhMTEvSmV1eC1kaW5mbHVlbmNlLTIwMTgtRnJhL3MwMWUwNl80ODAubXA0LFs3MjBwXWh0dHBzOi8vdnMyLmNkbmxhc3QuY29tL3MvMmUzOGYzMTJjOWQ0YTFlZDRmNjBlNmU4NzUwZmQ0NDZkNjFhMTEvSmV1eC1kaW5mbHVlbmNlLTIwMTgtRnJhL3MwMWUwNl83MjAubXA0In1dfV0=";
         String s_3 = "#06807407407003a02f02f07303702e07407606206507307402e06e06507402f06606906c06d02f06602f03203003103702f06606f07207306506706505f03802e06d070034";
 //
 //        System.out.println(urlDecodeBase64(s_1));
@@ -43,7 +46,7 @@ public class FilmixDecoder {
             s = s.replace(codec_b_arr[i], codec_a_arr[i]);
             s = s.replace("*", codec_b_arr[i]);
         }
-        String decodedUrl = StringUtils.newStringUtf8(Base64.decodeBase64(s));
+        String decodedUrl = StringUtils.newStringUtf8(org.apache.commons.codec.binary.Base64.decodeBase64(s));
         return decodedUrl;
     }
 
@@ -56,18 +59,72 @@ public class FilmixDecoder {
 //
 //            return base64.b64decode(clean_encoded_url)
     public String urlDecodeBase64_v2(String s) {
-        String[] tokens = {
-                "//Y2VyY2EudHJvdmEuc2FnZ2V6emE=",
-                "//c2ljYXJpby4yMi5tb3ZpZXM=",
-                "//a2lub2NvdmVyLnc5OC5uamJo"
-        };
-        String clean_encoded_url = s.substring(2).replace("\\/", "/");
-        for (String token : tokens) {
-            clean_encoded_url = clean_encoded_url.replace(token, "");
-        }
+        if (s != null) {
+            ArrayList<String> tokens = new ArrayList<>();
+//                    "//Y2VyY2EudHJvdmEuc2FnZ2V6emE=",
+//                    "//c2ljYXJpby4yMi5tb3ZpZXM=",
+//                    "//a2lub2NvdmVyLnc5OC5uamJo"
+            tokens.add("//UEplcmwyRkcxbUN5MDJMRA==");
+            tokens.add("//bVBWUnM4SXZQV0RSeFEybA==");
+            tokens.add("//Z0p1bnlRYlNzVWptV3Y1SA==");
+            String clean_encoded_url = s.substring(2).replace("\\/", "/");
 
-        String decodedUrl = StringUtils.newStringUtf8(base64.decode(clean_encoded_url.getBytes()));
-        return decodedUrl;
+            ArrayList<String> innerTokens = new ArrayList<>();
+            for (String token : tokens) {
+                if (clean_encoded_url.contains(token)) {
+                    clean_encoded_url = clean_encoded_url.replace(token, "");
+                } else {
+                    innerTokens.add(token);
+                }
+            }
+            ArrayList<String> errorInTokens = new ArrayList<>();
+            if (!innerTokens.isEmpty()) {
+                for (String innerToken : innerTokens) {
+                    if (clean_encoded_url.contains(innerToken)) {
+                        clean_encoded_url = clean_encoded_url.replace(innerToken, "");
+                    } else {
+                        errorInTokens.add(innerToken);
+                    }
+                }
+            }
+            if (!errorInTokens.isEmpty()) {
+                System.out.println("error in tokens");
+            }
+
+            return StringUtils.newStringUtf8(base64.decode(clean_encoded_url.getBytes()));
+        }
+        return null;
+    }
+
+    public String urlDecodeBase64_v3(String s) {
+        if (s != null) {
+            String clean_encoded_url = s.substring(2).replace("\\/", "/");
+
+//            List<String> tokens = new ArrayList<String>();
+
+            try {
+//                int tokensCount = 0;
+                Pattern regexCount = Pattern.compile("[\\W&&[^=]]+");
+                Pattern regex = Pattern.compile("((?::<:))\\w{24}");
+                Matcher regexMatcherCount = regexCount.matcher(clean_encoded_url);
+                while (regexMatcherCount.find()) {
+
+
+                    Matcher regexInnerMatcher = regex.matcher(clean_encoded_url);
+
+                    while (regexInnerMatcher.find()) {
+                        String token = regexInnerMatcher.group();
+                        clean_encoded_url = clean_encoded_url.replace(token, "");
+//                        tokensCount++;
+                    }
+                }
+            } catch (PatternSyntaxException ex) {
+                // Syntax error in the regular expression
+            }
+            String encodedString = StringUtils.newStringUtf8(Base64.decode(clean_encoded_url));
+            return encodedString;
+        }
+        return null;
     }
 
     private String urlDecodeUnicode(String s) {

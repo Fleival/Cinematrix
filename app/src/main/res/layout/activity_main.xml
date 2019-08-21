@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/drawer_layout"
-        tools:context=".activities.MainActivity"
+        tools:context=".view.activities.MainActivity"
         android:fitsSystemWindows="true">
 
 
@@ -96,17 +96,17 @@
                     android:layout_height="36dp">
 
                 <TextView
-                        android:id="@+id/filter_last_date_label"
+                        android:id="@+id/filter_country_label"
                         android:textSize="18sp"
                         android:textColor="@color/color_text_white"
                         android:fontFamily="@font/roboto_light"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="Дата добавления:"
+                        android:text="Страна:"
                         android:layout_marginStart="8dp"
                         android:gravity="center"/>
                 <Spinner
-                        android:id="@+id/filter_spinner_last_date"
+                        android:id="@+id/filter_spinner_country"
                         android:layout_width="180dp"
                         android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
@@ -173,33 +173,37 @@
                             android:layout_marginEnd="64dp"
                             android:background="@drawable/edit_text_bg_selector"
                             android:hint="search movie"
+                        android:textColorHint="@color/color_text_gray"
                             android:paddingStart="8dp"
                             android:singleLine="true"
                             android:textSize="16sp"
+                            android:textColor="@color/color_text_white"
                             android:fontFamily="@font/roboto_thin"
                             tools:text="Sample"/>
 
-                    <ImageView
-                            android:id="@+id/search_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignTop="@+id/search_et"
-                            android:layout_alignRight="@+id/search_et"
-                            android:layout_alignBottom="@+id/search_et"
-                            android:adjustViewBounds="true"
-                            android:cropToPadding="true"
-                            android:padding="2dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/search_ico"/>
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/lav_search_to_cross_white"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_alignTop="@+id/search_et"
+                        android:layout_alignEnd="@+id/search_et"
+                        android:layout_alignBottom="@+id/search_et"
+                        app:lottie_autoPlay="false"
+                        android:scaleType="centerInside"
+                        android:layout_marginEnd="4dp"
+                        app:lottie_rawRes="@raw/search_to_cross_white"
+                        app:lottie_loop="false"
+                        app:lottie_speed="1.75" />
 
                     <ImageView
                             android:id="@+id/filter_btn"
                             android:layout_width="42dp"
                             android:layout_height="42dp"
-                            android:layout_alignTop="@+id/search_btn"
-                            android:layout_alignBottom="@+id/search_btn"
+                            android:layout_alignTop="@+id/lav_search_to_cross_white"
+                            android:layout_alignBottom="@+id/lav_search_to_cross_white"
                             android:layout_marginStart="10dp"
-                            android:layout_toEndOf="@+id/search_btn"
+                            android:layout_toEndOf="@+id/lav_search_to_cross_white"
                             android:src="@drawable/filter_btn"/>
 
                 </RelativeLayout>
@@ -209,15 +213,14 @@
         </com.google.android.material.appbar.AppBarLayout>
 
 
-        <!--        <fragment-->
-        <!--                android:id="@+id/for_test_purpose"-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_height="0dp"-->
-        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintStart_toStartOf="@+id/appBarLayout"-->
-        <!--                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"-->
-        <!--                tools:layout="@layout/explore_fragment"/>-->
+<!--                <fragment-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="@+id/appBarLayout"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"-->
+<!--                        tools:layout="@layout/explore_fragment"/>-->
 
 
         <ImageView

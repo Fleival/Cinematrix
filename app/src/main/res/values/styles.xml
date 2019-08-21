@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorRedAccent</item>
         <item name="android:navigationBarColor" tools:targetApi="21">@color/colorPrimaryDark</item>
         <item name="android:spinnerStyle">@style/Widget.Spinner</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
@@ -41,4 +41,39 @@
 <!--        <item name="android:gravity">center_horizontal</item>-->
     </style>
 
+    <style name="CircularProgress" parent="@style/Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/progress_bar</item>
+        <item name="android:minHeight">130dp</item>
+        <item name="android:minWidth">130dp</item>
+    </style>
+
+
+    <style name="CustomExoMediaButton">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:layout_width">@dimen/video_view_exo_player_play_pause_button_dimen</item>
+        <item name="android:layout_height">@dimen/video_view_exo_player_play_pause_button_dimen</item>
+    </style>
+
+    <style name="CustomExoMediaButton.Play">
+        <item name="android:src">@drawable/ic_play_circle_filled</item>
+    </style>
+
+    <style name="CustomExoMediaButton.Pause">
+        <item name="android:src">@drawable/ic_pause_circle_filled</item>
+    </style>
+
+    <style name="FullScreenDialogStyle" parent="AppTheme">
+
+        <!-- Set this to true if you want Full Screen without status bar -->
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@color/colorPrimaryDark</item>
+        <item name="android:windowIsFloating">false</item>
+
+        <item name="android:windowBackground">@color/black</item>
+
+        <!-- Additionally if you want animations when dialog opening -->
+        <!--<item name="android:windowEnterAnimation">@anim/slide_up</item>-->
+        <!--<item name="android:windowExitAnimation">@anim/slide_down</item>-->
+    </style>
 </resources>

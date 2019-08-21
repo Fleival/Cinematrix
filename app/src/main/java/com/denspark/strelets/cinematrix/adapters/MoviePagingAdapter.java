@@ -156,6 +156,10 @@ public class MoviePagingAdapter extends PagedListAdapter<FilmixMovie, MoviePagin
         return getItem(position);
     }
 
+    public FilmixMovie getLastMovie(){
+        return getItem(getItemCount());
+    }
+
     public interface MoviePagingAdapterListener {
         void onMovieClick(FilmixMovie movie);
     }

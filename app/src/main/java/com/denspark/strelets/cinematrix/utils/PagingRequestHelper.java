@@ -53,7 +53,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *                         new Callback&lt;ApiResponse>() {
  *                             {@literal @}Override
  *                             public void onResponse(Call&lt;ApiResponse> call,
- *                                     Response&lt;ApiResponse> response) {
+ *                                     Playlist&lt;ApiResponse> response) {
  *                                 // TODO insert new records into database
  *                                 helperCallback.recordSuccess();
  *                             }
@@ -72,7 +72,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *                         new Callback&lt;ApiResponse>() {
  *                             {@literal @}Override
  *                             public void onResponse(Call&lt;ApiResponse> call,
- *                                     Response&lt;ApiResponse> response) {
+ *                                     Playlist&lt;ApiResponse> response) {
  *                                 // TODO insert new records into database
  *                                 helperCallback.recordSuccess();
  *                             }

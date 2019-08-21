@@ -1,15 +1,25 @@
-package com.denspark.strelets.cinematrix.activities;
+package com.denspark.strelets.cinematrix.view.activities;
 
 import android.animation.ObjectAnimator;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,26 +33,33 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
+
+import com.airbnb.lottie.LottieAnimationView;
+import com.denspark.strelets.cinematrix.R;
+import com.denspark.strelets.cinematrix.adapters.CheckableSpinnerAdapter;
+import com.denspark.strelets.cinematrix.database.entity.Country;
+import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
+import com.denspark.strelets.cinematrix.database.entity.Genre;
+import com.denspark.strelets.cinematrix.view.fragments.CategoryFragment;
+import com.denspark.strelets.cinematrix.view.fragments.ExploreFragment;
+import com.denspark.strelets.cinematrix.view.fragments.FavoriteFragment;
+import com.denspark.strelets.cinematrix.view_models.FactoryViewModel;
+import com.denspark.strelets.cinematrix.view_models.MovieViewModel;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Objects;
+
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
-import com.denspark.strelets.cinematrix.R;
-import com.denspark.strelets.cinematrix.adapters.CheckableSpinnerAdapter;
-import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
-import com.denspark.strelets.cinematrix.database.entity.Genre;
-import com.denspark.strelets.cinematrix.fragments.CategoryFragment;
-import com.denspark.strelets.cinematrix.fragments.ExploreFragment;
-import com.denspark.strelets.cinematrix.fragments.FavoriteFragment;
-import com.denspark.strelets.cinematrix.view_models.FactoryViewModel;
-import com.denspark.strelets.cinematrix.view_models.MovieViewModel;
 import dagger.android.AndroidInjection;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
-
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector {
 
@@ -57,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     private static final int PROF_BTN = 3;
 
     boolean isUp;
+    int flag = 0;
 
 
     private List<Drawable> notchIconsList = new ArrayList<>();
@@ -76,8 +94,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     private ConstraintLayout.LayoutParams navNotchParams;
     @BindView(R.id.nav_notch)
     ImageView navNotch;
-    @BindView(R.id.search_btn)
-    ImageView searchBtn;
+
+    @BindView(R.id.lav_search_to_cross_white)
+    LottieAnimationView searchAnimIcon;
+
     @BindView(R.id.filter_btn)
     ImageView filterBtn;
 
@@ -87,28 +107,42 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     @BindViews({R.id.explore_btn, R.id.cat_btn, R.id.fav_btn, R.id.prof_btn})
     List<Button> navButtons;
 
+    //    @BindView(R.id.filter_spinner_year)
+//    Spinner spinnerYear;
     @BindView(R.id.filter_spinner_year)
     Spinner spinnerYear;
     @BindView(R.id.filter_spinner_genre)
     Spinner spinnerGenre;
-    @BindView(R.id.filter_spinner_last_date)
-    Spinner spinnerReleaseDate;
+    @BindView(R.id.filter_spinner_country)
+    Spinner spinnerCountry;
     @BindView(R.id.apply_filter_btn)
     Button applyFilterBtn;
     @BindView(R.id.clear_filter_btn)
     Button clearFilterBtn;
 
+    @BindView(R.id.search_et)
+    EditText searchEtField;
+
     private Animation bottomNavAnimation;
 
     List<CheckableSpinnerAdapter.SpinnerItem<Genre>> spinner_genre_items = new ArrayList<>();
     CheckableSpinnerAdapter genreSpinnerAdapter;
+    ArrayAdapter<String> countryArrayAdapter;
+    String[] countryNames;
     List<Genre> selected_genre_items = new ArrayList<>();
+    String selected_year_item;
+    String selected_country_item;
 
     private Fragment exploreFragment;
     private Fragment favoriteFragment;
     LiveData<PagedList<FilmixMovie>> filterLiveData;
 
     List<Fragment> fragments = new ArrayList<>();
+
+    @Override
+    public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
+        return dispatchingAndroidInjector;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,11 +173,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         bottomNavAnimation = AnimationUtils.loadAnimation(this, R.anim.bounce);
 
 
-        searchBtn.setOnTouchListener(new View.OnTouchListener() {
+        searchAnimIcon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                searchBtn.setSelected(arg1.getAction() == MotionEvent.ACTION_DOWN);
-                return true;
+            public void onClick(View view) {
+                changeState();
             }
         });
 
@@ -170,20 +203,49 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.menu);
-        initSpinnerYear();
+
         configureViewModel();
 
 
         isUp = true;
         ExploreFragment ef = (ExploreFragment) exploreFragment;
 
+        try {
+            Field popup = Spinner.class.getDeclaredField("mPopup");
+            popup.setAccessible(true);
+
+            // Get private mPopup member variable and try cast to ListPopupWindow
+            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(spinnerGenre);
+
+            // Set popupWindow height to 500px
+            popupWindow.setHeight(500);
+        } catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+            // silently fail...
+        }
+
         applyFilterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 Log.d(TAG, "onClick: applyFilterBtn selected_genre_items = " + selected_genre_items);
-                movieViewModel.setGenreFilter(selected_genre_items);
-                filterLiveData = movieViewModel.getMoviesForGenrePagged();
+//                movieViewModel.setGenreFilter(selected_genre_items);
+//                filterLiveData = movieViewModel.getMoviesForGenrePagged();
+//                filterLiveData.observe(MainActivity.this, new Observer<PagedList<FilmixMovie>>() {
+//                    @Override
+//                    public void onChanged(PagedList<FilmixMovie> movies) {
+//                        Log.d(TAG, "onChanged: filtered films " + movies);
+//                        ef.setPagingAdapterData(movies);
+//                    }
+//                });
+
+                if (filterLiveData != null) {
+                    filterLiveData.removeObservers(MainActivity.this);
+                    ef.removeObservers();
+                }
+                filterLiveData = movieViewModel.searchFilteredMovies(null, selected_year_item, selected_country_item, selected_genre_items);
+                ef.setOnlineMode(true);
                 filterLiveData.observe(MainActivity.this, new Observer<PagedList<FilmixMovie>>() {
-                    @Override public void onChanged(PagedList<FilmixMovie> movies) {
+                    @Override
+                    public void onChanged(PagedList<FilmixMovie> movies) {
                         Log.d(TAG, "onChanged: filtered films " + movies);
                         ef.setPagingAdapterData(movies);
                     }
@@ -193,20 +255,70 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             }
         });
         clearFilterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
+//                if (filterLiveData != null) {
+//                    filterLiveData.removeObservers(MainActivity.this);
+//                    ef.setDefaultObserver(0);
+//                }
                 if (filterLiveData != null) {
                     filterLiveData.removeObservers(MainActivity.this);
-                    ef.setObserver();
                 }
+                ef.setOnlineMode(false);
+                ef.clearAdapterData();
+                ef.setDefaultObserver(0);
                 filterBtn.setSelected((!filterBtn.isSelected()));
                 onSlideViewButtonClick(filterLinearLayout);
             }
         });
-    }
 
-    @Override
-    public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
-        return dispatchingAndroidInjector;
+        searchEtField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count > 2) {
+                    if (filterLiveData != null) {
+                        filterLiveData.removeObservers(MainActivity.this);
+                        ef.removeObservers();
+                    }
+
+                    filterLiveData = movieViewModel.searchFilteredMovies(s.toString(),
+                            selected_year_item,
+                            selected_country_item,
+                            selected_genre_items);
+
+                    ef.setOnlineMode(true);
+                    filterLiveData.observe(MainActivity.this, new Observer<PagedList<FilmixMovie>>() {
+                        @Override
+                        public void onChanged(PagedList<FilmixMovie> movies) {
+                            Log.d(TAG, "onChanged: filtered films " + movies);
+                            ef.setPagingAdapterData(movies);
+                        }
+                    });
+                } else {
+                    if (filterLiveData != null) {
+                        filterLiveData.removeObservers(MainActivity.this);
+                    }
+                    ef.setOnlineMode(false);
+                    ef.clearAdapterData();
+                    ef.setDefaultObserver(0);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                flag = 0;
+                changeState();
+
+            }
+        });
+
+//        searchEtField.setText("вр");
     }
 
 
@@ -350,27 +462,60 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         movieViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(MovieViewModel.class);
 
+        movieViewModel.loadAllGenres();
+        movieViewModel.loadCounties();
+
         initSpinnerGenre();
         movieViewModel.gelAllGenres().observe(this, new Observer<List<Genre>>() {
-            @Override public void onChanged(List<Genre> genres) {
+            @Override
+            public void onChanged(List<Genre> genres) {
                 if (genres != null) {
-//                    String[] genreNames= new String[genres.size()];
-//                    for (int i = 0; i < genres.size(); i++) {
-//                        genreNames[i] = genres.get(i).getName();
-//                    }
                     updateSpinnerGenre(genres);
                 }
             }
         });
+        movieViewModel.getCountryLiveData().observe(this, new Observer<List<Country>>() {
+            @Override
+            public void onChanged(List<Country> countries) {
+                if (countries != null) {
+                    updateSpinnerCountry(countries);
+                }
+            }
+        });
+        initSpinnerYear();
 
         movieViewModel.updateStateOfRemoteDB();
     }
 
     private void initSpinnerYear() {
-        String[] years = {"2019", "2018", "2017", "2016", "2015"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        List<String> yearsList = new ArrayList<>();
+        yearsList.add("select");
+        for (int i = year; i >= 1920; i--) {
+            yearsList.add(String.valueOf(i));
+        }
+        String[] years = yearsList.toArray(new String[yearsList.size()]);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, years);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerYear.setAdapter(adapter);
+
+        spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            int count = 0;
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (count >= 1) {
+                    selected_year_item = years[position];
+                }
+                count++;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selected_year_item = null;
+            }
+        });
     }
 
     private void initSpinnerGenre() {
@@ -388,4 +533,74 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             genreSpinnerAdapter.notifyDataSetChanged();
         }
     }
+
+    private void updateSpinnerCountry(List<Country> countries) {
+        countryNames =new String[countries.size()+1];
+        countryNames[0] = "select";
+        for (Country c : countries) {
+            int index = countries.indexOf(c);
+            countryNames[index+1] = c.getName();
+        }
+        countryArrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, countryNames);
+        countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCountry.setAdapter(countryArrayAdapter);
+
+        spinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            int count = 0;
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (count >= 1) {
+                    selected_country_item = countryNames[position];
+                }
+                count++;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selected_country_item = null;
+            }
+        });
+        countryArrayAdapter.notifyDataSetChanged();
+    }
+
+//    private void initSpinnerCountry() {
+//        String headerText = "select";
+//        countryNames = new String[]{headerText, "США", "Бразилия"};
+//        countryArrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, countryNames);
+//        countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerCountry.setAdapter(countryArrayAdapter);
+//
+//        spinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            int count = 0;
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                if (count >= 1) {
+//                    selected_country_item = countryNames[position];
+//                }
+//                count++;
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                selected_country_item = null;
+//            }
+//        });
+//    }
+
+
+    private void changeState() {
+        if (flag == 0) {
+            searchAnimIcon.setSpeed(1.75f);
+            searchAnimIcon.playAnimation();
+            flag = 1;
+        }else {
+            searchAnimIcon.setSpeed(-1.75f);
+            searchAnimIcon.playAnimation();
+            flag = 0;
+        }
+
+    }
+
 }

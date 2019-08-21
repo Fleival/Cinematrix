@@ -1,5 +1,6 @@
 package com.denspark.strelets.cinematrix.database.entity;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -9,7 +10,6 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity(tableName = "movie")
 public class FilmixMovie implements ContainerEntity{
@@ -19,6 +19,9 @@ public class FilmixMovie implements ContainerEntity{
 
     @Expose
     @Getter @Setter private String name;
+
+    @Expose(serialize = false, deserialize = false)
+    @Getter @Setter private String nameLowerCase;
 
     @Expose
     @Getter @Setter private String nameORIG;
@@ -57,5 +60,14 @@ public class FilmixMovie implements ContainerEntity{
 
     @Ignore
     @Getter @Setter private List<Genre> genres;
+
+    @Ignore
+    @Getter @Setter private List<Person> actors;
+
+    @Ignore
+    @Getter @Setter LiveData<List<Person>> actorsLiveData;
+
+    @Ignore
+    @Getter @Setter LiveData<List<Genre>> genresLiveData;
 
 }

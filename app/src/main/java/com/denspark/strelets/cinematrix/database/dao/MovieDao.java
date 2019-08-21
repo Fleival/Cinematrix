@@ -35,7 +35,13 @@ public interface MovieDao {
     @Query("SELECT * FROM movie")
     LiveData<List<FilmixMovie>> getAllMovies();
 
-    @Query("SELECT * FROM movie")
+    @Query("SELECT * FROM movie ORDER BY uploadDate DESC")
     DataSource.Factory<Integer, FilmixMovie> getAllMoviesPaged();
+
+    @Query("SELECT * FROM movie WHERE movie.nameLowerCase LIKE '%' || :movieName || '%'")
+    DataSource.Factory<Integer, FilmixMovie> searchMoviesByName(String movieName);
+
+    @Query("SELECT COUNT(id) FROM movie")
+    LiveData<Integer> getRowCount();
 
 }

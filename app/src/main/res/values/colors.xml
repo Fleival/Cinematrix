@@ -7,8 +7,11 @@
     <color name="colorRedAccent">#D32F2F</color>
     <color name="white_alpha20">#33FFFFFF</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
     <color name="main_bg">#0F0F0F</color>
+    <color name="main_bg_gray">#A3A3A3</color>
     <color name="color_text_white">#ebebeb</color>
+    <color name="color_text_gray">#ADADAD</color>
     <color name="movie_title_textColor">#ffebebeb</color>
 
 </resources>

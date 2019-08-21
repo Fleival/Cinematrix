@@ -8,6 +8,7 @@ import com.denspark.strelets.cinematrix.repository.MovieRepository;
 import com.google.gson.*;
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -16,8 +17,10 @@ import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Module(includes = ViewModelModule.class)
 public class AppModule {
@@ -31,11 +34,12 @@ public class AppModule {
 //        return Room.databaseBuilder(application,
 //                MovieDatabase.class, "MovieDatabase.db")
 //                .build();
+        MovieDatabase movieDatabase = MovieDatabase.getINSTANCE(application, false);
 
-        return MovieDatabase.getINSTANCE(application, false);
+        return movieDatabase;
     }
 
-    @Provides
+    @Provides 
     @Singleton
     MovieDao provideMovieDao(MovieDatabase database) {
         return database.movieDao();
@@ -78,6 +82,12 @@ public class AppModule {
         return database.stateOfRemoteDBdao();
     }
 
+    @Provides
+    @Singleton
+    CountryDao provideCountryDao(MovieDatabase database) {
+        return database.countryDao();
+    }
+
     // --- REPOSITORY INJECTION ---
 
     @Provides
@@ -91,6 +101,7 @@ public class AppModule {
             MovieDao movieDao,
             PersonDao personDao,
             GenreDao genreDao,
+            CountryDao countryDao,
             PersonMovieDao personMovieDao,
             MovieGenreDao movieGenreDao,
             StateOfRemoteDBdao stateOfRemoteDBdao,
@@ -102,6 +113,7 @@ public class AppModule {
                 movieDao,
                 personDao,
                 genreDao,
+                countryDao,
                 personMovieDao,
                 movieGenreDao,
                 stateOfRemoteDBdao,
@@ -112,7 +124,8 @@ public class AppModule {
 
     // --- NETWORK INJECTION ---
     // TODO: 10.04.2019  Make Retrofit database update from server
-    private static String BASE_URL = "http://192.168.43.220:8080/";
+//    private static String BASE_URL = "http://192.168.43.220:8020/";
+    private static String BASE_URL = "http://82.144.210.14:8020/";
 
     @Provides
     Gson provideGson() {
@@ -124,6 +137,7 @@ public class AppModule {
                     throws JsonParseException {
 
                 SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                format.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
                 String date = json.getAsJsonPrimitive().getAsString();
                 try {
                     return format.parse(date);
@@ -137,10 +151,17 @@ public class AppModule {
 
     @Provides
     Retrofit provideRetrofit(Gson gson) {
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
+        client.connectTimeout(15, TimeUnit.SECONDS);
+        client.readTimeout(15, TimeUnit.SECONDS);
+        client.writeTimeout(15, TimeUnit.SECONDS);
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)
+                .client(client.build())
                 .build();
+
         return retrofit;
     }
 

@@ -7,44 +7,46 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.load.MultiTransformation;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.denspark.strelets.cinematrix.R;
+import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.database.entity.Person;
 import com.denspark.strelets.cinematrix.glide.GlideApp;
-import com.denspark.strelets.cinematrix.utils.DimensionUtils;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import jp.wasabeef.glide.transformations.SupportRSBlurTransformation;
 
 public class ActorsInMovieRvAdapter extends ListAdapter<Person, ActorsInMovieRvAdapter.PersonHolder> {
+    private  ActorClickListener actorClickListener;
     private static final DiffUtil.ItemCallback<Person> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Person>() {
-                @Override public boolean areItemsTheSame(@NonNull Person oldItem, @NonNull Person newItem) {
+                @Override
+                public boolean areItemsTheSame(@NonNull Person oldItem, @NonNull Person newItem) {
                     return oldItem.getId() == (newItem.getId());
                 }
 
-                @Override public boolean areContentsTheSame(@NonNull Person oldItem, @NonNull Person newItem) {
+                @Override
+                public boolean areContentsTheSame(@NonNull Person oldItem, @NonNull Person newItem) {
                     if (oldItem.getName() != null
                             &&
                             newItem.getName() != null
                     ) {
 
-                        return oldItem.getName().equals(newItem.getName())
-                                &&
-                                oldItem.getPhotoUrl().equals(newItem.getPhotoUrl());
+                        return oldItem.getName().equals(newItem.getName());
+//                                &&
+//                                oldItem.getPhotoUrl().equals(newItem.getPhotoUrl());
                     }
                     return false;
                 }
             };
 
-    public ActorsInMovieRvAdapter() {
+    public ActorsInMovieRvAdapter(ActorClickListener actorClickListener) {
         super(DIFF_CALLBACK);
+        this.actorClickListener = actorClickListener;
     }
 
     class PersonHolder extends RecyclerView.ViewHolder {
@@ -55,15 +57,37 @@ public class ActorsInMovieRvAdapter extends ListAdapter<Person, ActorsInMovieRvA
             super(personItem);
             actorName = personItem.findViewById(R.id.actor_name_tv);
             actorPhoto = personItem.findViewById(R.id.actor_photo_iv);
+
+            personItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (actorClickListener != null && position != RecyclerView.NO_POSITION) {
+                        actorClickListener.onActorClick(getActor(position));
+                    }
+                }
+            });
         }
+
     }
 
-    @NonNull @Override public PersonHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Person getActor(int position) {
+        return getItem(position);
+    }
+
+    public interface ActorClickListener {
+        void onActorClick(Person actor);
+    }
+
+    @NonNull
+    @Override
+    public PersonHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_actor, parent, false);
         return new PersonHolder(itemView);
     }
 
-    @Override public void onBindViewHolder(@NonNull PersonHolder holder, int position) {
+    @Override
+    public void onBindViewHolder(@NonNull PersonHolder holder, int position) {
         Person currentPerson = getItem(position);
         Context context = holder.actorPhoto.getContext();
 
@@ -76,6 +100,7 @@ public class ActorsInMovieRvAdapter extends ListAdapter<Person, ActorsInMovieRvA
 
         GlideApp.with(context)
                 .asBitmap()
+                .fallback(R.drawable.empty_actor_photo)
                 .load(currentPerson.getPhotoUrl())
                 .transform(bitmapMultiTransformation)
                 .into(holder.actorPhoto);

@@ -33,4 +33,7 @@ public interface MovieGenreDao {
 
     @RawQuery(observedEntities = FilmixMovie.class)
     DataSource.Factory<Integer, FilmixMovie> getMoviesForGenrePagged(SupportSQLiteQuery query);
+
+    @Query("DELETE FROM movie_genre_join")
+    void deleteAllMovieGenres();
 }

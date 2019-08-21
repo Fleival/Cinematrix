@@ -17,7 +17,7 @@ public interface StateOfRemoteDBdao {
     @Update
     void update(StateOfRemoteDB stateOfRemoteDB);
 
-    @Query("SELECT * FROM local_db_state WHERE id = 1")
+    @Query("SELECT * FROM remote_db_state WHERE id = 1")
     LiveData<StateOfRemoteDB> load();
 
 }

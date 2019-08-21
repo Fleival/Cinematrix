@@ -12,7 +12,7 @@ public class StateOfLocalDB {
     @PrimaryKey(autoGenerate = true)
     @Getter @Setter private int id;
     @Expose
-    @Getter @Setter private int maxId;
+    @Getter @Setter private int lastId;
     @Expose
-    @Getter @Setter private long moviesCount;
+    @Getter @Setter private int moviesCount;
 }

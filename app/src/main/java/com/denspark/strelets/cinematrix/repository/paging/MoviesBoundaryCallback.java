@@ -1,10 +1,12 @@
 package com.denspark.strelets.cinematrix.repository.paging;
 
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.PagedList;
+
 import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.repository.MovieRepository;
 import com.denspark.strelets.cinematrix.utils.PagingRequestHelper;
@@ -13,18 +15,19 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class MoviesBoundaryCallback extends PagedList.BoundaryCallback<FilmixMovie> {
+
     private static final String TAG = "MoviesBoundaryCallback";
 
-    private int start;
-    private int maxRows;
-    private int check = 60;
+    private int page = 1;
+    private int maxResult = 10;
+    private int lastId;
 
-    private String query = "SELECT f FROM Film f ORDER BY f.id ASC";
+//    private String query = "SELECT f from Film f ORDER BY f.uploadDate desc";
 
     private MovieRepository repository;
     private PagingRequestHelper helper;
 
-    private MutableLiveData<String> networkErrors = new MutableLiveData<>();
+    private MutableLiveData<String> networkState = new MutableLiveData<>();
 
 
     public MoviesBoundaryCallback(MovieRepository repository) {
@@ -37,25 +40,43 @@ public class MoviesBoundaryCallback extends PagedList.BoundaryCallback<FilmixMov
 
     @Override
     public void onZeroItemsLoaded() {
-        start = 0;
-        maxRows = 60;
-        repository.addSomeDataFromServer(query, start, maxRows, PagingRequestHelper.RequestType.INITIAL, helper);
-//        requestAndSave(PagingRequestHelper.RequestType.INITIAL);
+        repository.atomicLastId.set(0);
+        lastId = repository.atomicLastId.get();
+        page=1;
+        updateDataFromServer();
     }
 
-    // TODO: 14.06.2019 This is piece of shit
-    @Override public void onItemAtEndLoaded(@NonNull FilmixMovie itemAtEnd) {
-        int itemAtEndId = itemAtEnd.getId();
-        if (itemAtEndId == check) {
-            check = check + 30;
-            Log.d(TAG, "onItemAtEndLoaded: " + itemAtEnd.getId());
-            repository.addSomeDataFromServer(query, itemAtEndId, 30, PagingRequestHelper.RequestType.AFTER, helper);
+    // TODO: 14.06.2019 Need to refactor this is piece of shit but its working
+    @Override
+    public void onItemAtEndLoaded(@NonNull FilmixMovie itemAtEnd) {
+        lastId = repository.atomicLastId.get();
+
+        Log.d(TAG, "onItemAtEndLoaded:  page= " + page + " itemAtEnd_Id= " + itemAtEnd.getId());
+        Log.d(TAG, "lastId: " + lastId);
+        if (itemAtEnd.getId() == lastId) {
+            page = repository.atomicMovieCount.get()/maxResult;
+            page++;
+            updateDataFromServer();
         }
+
+    }
+
+    private void updateDataFromServer() {
+        repository.addSomeDataFromServer(page, maxResult, PagingRequestHelper.RequestType.INITIAL, helper);
     }
 
 
-    LiveData<String> networkErrors() {
-        return networkErrors;
+    public LiveData<String> networkState() {
+        return networkState;
+    }
+
+    public void postNetworkState(String msg) {
+        networkState.postValue(msg);
+    }
+
+    public boolean retryFailed(String stateMsg) {
+        postNetworkState(stateMsg);
+        return helper.retryAllFailed();
     }
 
 }

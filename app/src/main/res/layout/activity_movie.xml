@@ -1,358 +1,361 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.activities.MovieActivity">
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/main_bg"
-        tools:context=".activities.MovieActivity">
+        android:background="@color/main_bg">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" app:layout_constraintStart_toEndOf="@+id/movie_title_d_tv"
-            app:layout_constraintEnd_toEndOf="@+id/movie_title_d_tv">
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/movie_title_d_tv"
+            app:layout_constraintStart_toEndOf="@+id/movie_title_d_tv">
 
-        <TextView android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:text="@string/Year"
-                  android:textSize="14sp"
-                  android:fontFamily="@font/roboto_black"
-                  android:layout_marginStart="16dp"
-                  android:layout_marginTop="16dp"
-                  android:textColor="@color/movie_title_textColor"
-                  app:layout_constraintTop_toBottomOf="@+id/movie_bl_bg"
-                  android:id="@+id/movie_year_label"
-                  app:layout_constraintStart_toStartOf="parent"/>
-
-        <TextView android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:textSize="14sp"
-                  android:fontFamily="@font/roboto_light"
-                  android:layout_marginStart="4dp"
-                  android:layout_marginTop="16dp"
-                  android:textColor="@color/movie_title_textColor"
-                  app:layout_constraintTop_toBottomOf="@+id/movie_bl_bg"
-                  android:id="@+id/movie_year"
-                  app:layout_constraintStart_toEndOf="@+id/movie_year_label"
-                  tools:text="2018"/>
-
-        <TextView
+            <TextView
+                android:id="@+id/movie_year_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_black"
+                android:text="@string/Year"
                 android:textColor="@color/movie_title_textColor"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movie_bl_bg" />
+
+            <TextView
+                android:id="@+id/movie_year"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_light"
+                android:textColor="@color/movie_title_textColor"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/movie_year_label"
+                app:layout_constraintTop_toBottomOf="@+id/movie_bl_bg"
+                tools:text="2018" />
+
+            <TextView
+                android:id="@+id/movie_country_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_black"
                 android:text="@string/Country"
+                android:textColor="@color/movie_title_textColor"
                 android:textSize="14sp"
-                android:fontFamily="@font/roboto_black"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movie_year_label" />
+
+            <TextView
+                android:id="@+id/movie_country"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:textColor="@color/movie_title_textColor"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/movie_country_label"
                 app:layout_constraintTop_toBottomOf="@+id/movie_year_label"
-                android:id="@+id/movie_country_label"/>
+                tools:text="США" />
 
-        <TextView android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  android:textSize="14sp"
-                  android:fontFamily="@font/roboto_light"
-                  android:layout_marginStart="4dp"
-                  android:layout_marginTop="8dp"
-                  android:textColor="@color/movie_title_textColor"
-                  app:layout_constraintTop_toBottomOf="@+id/movie_year_label"
-                  android:id="@+id/movie_country"
-                  app:layout_constraintStart_toEndOf="@+id/movie_country_label"
-                  tools:text="США"/>
-        <TextView
+            <TextView
+                android:id="@+id/movie_genre_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/movie_title_textColor"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_black"
                 android:text="@string/Genre"
+                android:textColor="@color/movie_title_textColor"
                 android:textSize="14sp"
-                android:fontFamily="@font/roboto_black"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movie_country_label" />
+
+            <TextView
+                android:id="@+id/movie_genre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/roboto_light"
+                android:textColor="@color/movie_title_textColor"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/movie_poster"
+                app:layout_constraintStart_toEndOf="@+id/movie_genre_label"
                 app:layout_constraintTop_toBottomOf="@+id/movie_country_label"
-                android:id="@+id/movie_genre_label"/>
+                tools:text="Драма, Боевик, Фантастика" />
 
-        <TextView android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  tools:text="Драма, Боевик, Фантастика"
-                  android:textSize="14sp"
-                  android:fontFamily="@font/roboto_light"
-                  android:layout_marginStart="4dp"
-                  android:layout_marginTop="8dp"
-                  android:textColor="@color/movie_title_textColor"
-                  app:layout_constraintTop_toBottomOf="@+id/movie_country_label"
-                  android:id="@+id/movie_genre"
-                  app:layout_constraintStart_toEndOf="@+id/movie_genre_label" android:layout_marginEnd="4dp"
-                  app:layout_constraintEnd_toStartOf="@+id/movie_poster"/>
-        <TextView
+            <TextView
+                android:id="@+id/movie_translation_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/movie_title_textColor"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_black"
                 android:text="@string/Translation"
+                android:textColor="@color/movie_title_textColor"
                 android:textSize="14sp"
-                android:fontFamily="@font/roboto_black"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movie_genre" />
+
+            <TextView
+                android:id="@+id/movie_translation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/roboto_light"
+                android:textColor="@color/movie_title_textColor"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/movie_poster"
+                app:layout_constraintStart_toEndOf="@+id/movie_translation_label"
                 app:layout_constraintTop_toBottomOf="@+id/movie_genre"
-                android:id="@+id/movie_translation_label"/>
+                tools:text="Дублированный [Лицензия]" />
 
-        <TextView android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  tools:text="Дублированный [Лицензия]"
-                  android:textSize="14sp"
-                  android:fontFamily="@font/roboto_light"
-                  android:layout_marginStart="4dp"
-                  android:layout_marginTop="8dp"
-                  android:textColor="@color/movie_title_textColor"
-                  app:layout_constraintTop_toBottomOf="@+id/movie_genre"
-                  android:id="@+id/movie_translation"
-                  app:layout_constraintStart_toEndOf="@+id/movie_translation_label" android:layout_marginEnd="4dp"
-                  app:layout_constraintEnd_toStartOf="@+id/movie_poster"/>
-        <TextView
+            <TextView
+                android:id="@+id/movie_duration_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/movie_title_textColor"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_black"
                 android:text="@string/Duration"
+                android:textColor="@color/movie_title_textColor"
                 android:textSize="14sp"
-                android:fontFamily="@font/roboto_black"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movie_translation" />
+
+            <TextView
+                android:id="@+id/movie_duration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/roboto_light"
+                android:textColor="@color/movie_title_textColor"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/movie_duration_label"
                 app:layout_constraintTop_toBottomOf="@+id/movie_translation"
-                android:id="@+id/movie_duration_label"/>
+                tools:text="107 мин" />
 
-        <TextView android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  tools:text="107 мин"
-                  android:textSize="14sp"
-                  android:fontFamily="@font/roboto_light"
-                  android:layout_marginStart="4dp"
-                  android:layout_marginTop="8dp"
-                  android:textColor="@color/movie_title_textColor"
-                  app:layout_constraintTop_toBottomOf="@+id/movie_translation"
-                  android:id="@+id/movie_duration"
-                  app:layout_constraintStart_toEndOf="@+id/movie_duration_label" android:layout_marginEnd="4dp"
-                  app:layout_constraintEnd_toEndOf="parent"/>
-
-        <TextView
+            <TextView
+                android:id="@+id/movie_quality_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/movie_title_textColor"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_black"
                 android:text="@string/Quality"
+                android:textColor="@color/movie_title_textColor"
                 android:textSize="14sp"
-                android:fontFamily="@font/roboto_black"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/movie_duration"
-                android:id="@+id/movie_quality_label"/>
+                app:layout_constraintTop_toBottomOf="@+id/movie_duration" />
 
-        <TextView android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  tools:text="BDRip"
-                  android:textSize="14sp"
-                  android:fontFamily="@font/roboto_light"
-                  android:layout_marginStart="4dp"
-                  android:layout_marginTop="8dp"
-                  android:textColor="@color/movie_title_textColor"
-                  app:layout_constraintTop_toBottomOf="@+id/movie_duration"
-                  android:id="@+id/movie_quality"
-                  app:layout_constraintStart_toEndOf="@+id/movie_quality_label"
-                  android:layout_marginEnd="4dp"
-                  app:layout_constraintEnd_toEndOf="parent"/>
-
-        <TextView
+            <TextView
+                android:id="@+id/movie_quality"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/roboto_light"
                 android:textColor="@color/movie_title_textColor"
-                android:text="@string/actrors_label"
                 android:textSize="14sp"
-                android:fontFamily="@font/roboto_black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/movie_quality_label"
+                app:layout_constraintTop_toBottomOf="@+id/movie_duration"
+                tools:text="BDRip" />
+
+            <TextView
+                android:id="@+id/movie_actors_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_black"
+                android:text="@string/actrors_label"
+                android:textColor="@color/movie_title_textColor"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/movie_quality_label"
-                android:id="@+id/movie_actors_label"/>
+                app:layout_constraintTop_toBottomOf="@+id/movie_quality_label" />
 
-        <RelativeLayout
+            <RelativeLayout
                 android:id="@+id/actors_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/actors_plate"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/movie_actors_label"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="8dp"
-        >
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/actors_plate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movie_actors_label">
 
-            <ImageView
+                <ImageView
                     android:id="@+id/actor_arrow_left"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/arrow_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true" android:layout_marginStart="0dp"/>
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="0dp"
+                    android:src="@drawable/arrow_left" />
 
-            <ImageView
+                <ImageView
                     android:id="@+id/actor_arrow_right"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/arrow_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"/>
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/arrow_right" />
 
-            <androidx.recyclerview.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/actors_rec_view"
                     android:layout_width="wrap_content"
                     android:layout_height="136dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
-                    android:orientation="horizontal"
-                    tools:listitem="@layout/item_actor"
-                    tools:itemCount="3"
-                    android:layout_toEndOf="@+id/actor_separator_left"
-
-                    android:layout_toStartOf="@+id/actor_separator_right"
-                    android:layout_marginEnd="-4dp"
                     android:layout_marginStart="-4dp"
-            />
 
-            <ImageView
+                    android:layout_marginEnd="-4dp"
+                    android:layout_toStartOf="@+id/actor_separator_right"
+                    android:layout_toEndOf="@+id/actor_separator_left"
+                    android:orientation="horizontal"
+
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_actor" />
+
+                <ImageView
                     android:id="@+id/actor_separator_left"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/separator_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/actor_arrow_left"
-                    android:layout_marginEnd="2dp"/>
-            <ImageView
-                    android:id="@+id/actor_separator_right"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/separator_right"
+                    android:layout_marginEnd="2dp"
+                    android:layout_toEndOf="@+id/actor_arrow_left"
+                    android:src="@drawable/separator_left" />
+
+                <ImageView
+                    android:id="@+id/actor_separator_right"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:layout_toStartOf="@+id/actor_arrow_right"
-                    android:layout_marginEnd="2dp"/>
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="2dp"
+                    android:layout_toStartOf="@+id/actor_arrow_right"
+                    android:src="@drawable/separator_right" />
 
+            </RelativeLayout>
 
-
-
-        </RelativeLayout>
-
-        <TextView
+            <TextView
+                android:id="@+id/movie_description_label"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/movie_title_textColor"
-                android:text="@string/Description"
-                android:textSize="14sp"
-                android:fontFamily="@font/roboto_black"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_black"
+                android:text="@string/Description"
+                android:textColor="@color/movie_title_textColor"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/actors_container"
-                android:id="@+id/movie_description_label"/>
+                app:layout_constraintTop_toBottomOf="@+id/actors_container" />
 
-        <TextView
+            <TextView
+                android:id="@+id/movie_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="6dp"
-                android:textColor="@color/movie_title_textColor"
-                android:fontFamily="@font/roboto_thin"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/description_bg_text"
+                android:fontFamily="@font/roboto_thin"
+                android:padding="6dp"
                 android:text="  Когда-то Кэрол Дэнверс жила на Земле и была пилотом ВВС США. У неё было трудное детство, она прошла многое, чтобы стать той, кем стала. И всего этого девушка почти не помнит. Виной тому одна авария, которая чуть не забрала её жизнь. Спасли Кэрол инопланетяне из расы Крии. Они решили дать девушке своей крови, приняв в свою расу и сделав её идеальным бойцом в войне с другой жестокой расой Скруллам.
     Кэрол имеет суперсилы: она неуязвима, может летать и создает мощные потоки энергии. Когда полем битвы двух рас становится Земля, девушка начинает вспоминать свою прошлую жизнь. От Кэрол зависит судьба Земли и расы Крии, ведь она одна из самых могущественных существ во Вселенной"
+                android:textColor="@color/movie_title_textColor"
                 android:textSize="14sp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/movie_description_label"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/movie_description"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movie_description_label" />
 
-
-        <ImageView
+            <ImageView
                 android:id="@+id/movie_bl_bg"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/movie_bl_bg"
+                android:cropToPadding="false"
                 android:scaleType="centerCrop"
-                app:layout_constraintTop_toTopOf="parent"
-                android:cropToPadding="false" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:src="@drawable/movie_bl_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+            <ImageView
                 android:id="@+id/movie_poster"
                 android:layout_width="153dp"
                 android:layout_height="213dp"
-                android:background="@drawable/poster_border"
-                android:src="@drawable/movie_poster"
-                android:scaleType="fitXY"
-                android:cropToPadding="true"
-                android:padding="2.2dp"
                 android:layout_marginTop="76dp"
                 android:layout_marginEnd="36dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:background="@drawable/poster_border"
+                android:cropToPadding="true"
+                android:padding="2.2dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/movie_poster"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-
-        <TextView
-                android:text="Капитан марвел"
+            <TextView
+                android:id="@+id/movie_title_d_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="6dp"
-                android:id="@+id/movie_title_d_tv"
-                android:fontFamily="@font/roboto_bold"
-                android:textSize="18sp"
-                android:textColor="@color/movie_title_textColor"
-                android:textAlignment="center"
-                android:background="@drawable/movie_title_bg"
-                app:layout_constraintEnd_toStartOf="@+id/movie_poster"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintStart_toStartOf="@+id/movie_bl_bg"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/movieBarLayout"/>
+                android:layout_marginTop="76dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/movie_title_bg"
+                android:fontFamily="@font/roboto_bold"
+                android:padding="6dp"
+                android:text="Капитан марвел"
+                android:textAlignment="center"
+                android:textColor="@color/movie_title_textColor"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/movie_poster"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-
-        <Button
+            <Button
+                android:id="@+id/play_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="37dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/watch_btn"
+                android:fontFamily="@font/roboto_bold"
                 android:text="@string/watch"
                 android:textColor="@color/movie_title_textColor"
-                android:background="@drawable/watch_btn"
-                android:layout_height="37dp"
-                android:id="@+id/play_btn"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/roboto_bold"
-                app:layout_constraintTop_toBottomOf="@+id/movie_poster"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp"
                 app:layout_constraintStart_toStartOf="@+id/movie_poster"
-                android:layout_marginStart="8dp" android:layout_width="wrap_content"/>
+                app:layout_constraintTop_toBottomOf="@+id/movie_poster" />
 
-        <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/movieBarLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:elevation="0dp"
-                android:background="@drawable/toolbar_trans_bg"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/movie_layout_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:contentInsetStartWithNavigation="0dp"
-                    app:navigationIcon="@drawable/back_ico"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+    </ScrollView>
 
-        </com.google.android.material.appbar.AppBarLayout>
+    <include layout="@layout/app_bar_activity_movie" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</ScrollView>
+    <include layout="@layout/plist_bottom_sheet" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

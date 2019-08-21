@@ -20,4 +20,6 @@
     <string name="Translation">Перевод:</string>
     <string name="watch">Watch</string>
     <string name="actrors_label">Актёры:</string>
+    <string name="response_error">Receiving of data from server failed</string>
+    <string name="retry_button">Retry?</string>
 </resources>

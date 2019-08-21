@@ -76,6 +76,12 @@ public class JTestingModule {
         return database.stateOfRemoteDBdao();
     }
 
+    @Provides
+    @Singleton
+    CountryDao provideCountryDao(MovieDatabase database) {
+        return database.countryDao();
+    }
+
 
     // --- REPOSITORY INJECTION ---
 
@@ -90,6 +96,7 @@ public class JTestingModule {
             MovieDao movieDao,
             PersonDao personDao,
             GenreDao genreDao,
+            CountryDao countryDao,
             PersonMovieDao personMovieDao,
             MovieGenreDao movieGenreDao,
             StateOfRemoteDBdao stateOfRemoteDBdao,
@@ -101,6 +108,7 @@ public class JTestingModule {
                 movieDao,
                 personDao,
                 genreDao,
+                countryDao,
                 personMovieDao,
                 movieGenreDao,
                 stateOfRemoteDBdao,

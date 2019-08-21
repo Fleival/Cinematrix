@@ -8,7 +8,6 @@ import com.denspark.strelets.cinematrix.di.module.ActivityModule;
 import com.denspark.strelets.cinematrix.di.module.AppModule;
 import com.denspark.strelets.cinematrix.di.module.ExploreFragmentModule;
 import com.denspark.strelets.cinematrix.di.module.MovieActivityModule;
-import com.denspark.strelets.cinematrix.fragments.ExploreFragment;
 
 import javax.inject.Singleton;
 

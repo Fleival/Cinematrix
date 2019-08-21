@@ -1,6 +1,6 @@
 package com.denspark.strelets.cinematrix.di.module;
 
-import com.denspark.strelets.cinematrix.activities.MainActivity;
+import com.denspark.strelets.cinematrix.view.activities.MainActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

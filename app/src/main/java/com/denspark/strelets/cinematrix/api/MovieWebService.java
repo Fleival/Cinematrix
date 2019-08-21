@@ -12,28 +12,50 @@ import retrofit2.http.Query;
 import java.util.List;
 
 public interface MovieWebService {
-    @GET("/test_spring/get_films")
-//    @GET("/test_spring/get_films?query=SELECT f FROM Film f WHERE f.id<=60")
-//    @GET("/test_spring/get_films?query=SELECT f FROM Film f") // Dont DO this !!!!!
+    @GET("/filmix/get_films")
+//    @GET("/filmix/get_films?query=SELECT f FROM Film f WHERE f.id<=60")
+//    @GET("/filmix/get_films?query=SELECT f FROM Film f") // Dont DO this !!!!!
     Call<List<FilmixMovie>> getMovies(@Query("query") String query);
 
-    @GET("/test_spring/get_ex_films")
-    Call<List<FilmixMovie>> getNewMovies(@Query("query") String query, @Query("start") int start, @Query("maxRows") int maxRows);
+    @GET("/filmix/get_ex_films")
+    Call<List<FilmixMovie>> getNewMovies(@Query("query") String query, @Query("page") int page, @Query("maxResult") int maxResult);
 
-    @GET("/test_spring/get_persons?query=SELECT p FROM Person p WHERE p.id<=110")
+    @GET("/filmix/films")
+    Call<List<FilmixMovie>> getNewMovies(@Query("page") int page, @Query("maxResult") int maxResult);
+
+    @GET("/filmix/get_persons?query=SELECT p FROM Person p WHERE p.id<=110")
     Call<List<Person>> getTestPerson();
 
-    @GET("/test_spring/get_films?query=SELECT f FROM Film f WHERE f.id=30500")
+    @GET("/filmix/get_films?query=SELECT f FROM Film f WHERE f.id=30500")
     Call<List<FilmixMovie>> getSomeMovies();
 
-    @GET("/test_spring/genre/{id}")
+    @GET("/filmix/genre/{id}")
     Call<Genre> getGenreByIdRemote(@Path("id") int genreId);
 
-    @GET("/test_spring/person/{id}")
+    @GET("/filmix/load_genres")
+    Call<List<Genre>> loadGenres();
+
+    @GET("/filmix/person/{id}")
     Call<Person> getPersonByIdRemote(@Path("id") int personId);
 
-    @GET("/test_spring/get_db_state")
+    @GET("/filmix/film/{id}")
+    Call<FilmixMovie> getMovieByIdRemote(@Path("id") int movieId);
+
+    @GET("/filmix/get_db_state")
     Call<StateOfRemoteDB> getStateOfRemoteDB();
 
+    @GET("/filmix/search_films")
+    Call<List<FilmixMovie>> searchMovies(@Query("search") String search, @Query("page") int page, @Query("maxResult")int maxResult );
 
+    @GET("/filmix/filtered_film_search")
+    Call<List<FilmixMovie>> filteredFilmSearch(
+            @Query("search") String searchName,
+            @Query("year") String year,
+            @Query("country") String country,
+            @Query("genres") String genres,
+            @Query("page") int page,
+            @Query("maxResult")int maxResult );
+
+    @GET("/filmix/countries")
+    Call<List<String>> loadCountryList();
 }

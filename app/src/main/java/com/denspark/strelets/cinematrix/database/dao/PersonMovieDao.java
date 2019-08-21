@@ -21,4 +21,7 @@ public interface PersonMovieDao extends JoinDao {
 
     @Query("SELECT * FROM movie INNER JOIN person_movie_join ON movie.id=person_movie_join.movieId WHERE person_movie_join.personId=:personId")
     List<Genre> getMoviesForPerson(int personId);
+
+    @Query("DELETE FROM person_movie_join")
+    void deleteAllMoviePersons();
 }

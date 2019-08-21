@@ -11,9 +11,14 @@ import lombok.ToString;
 @ToString
 public class Genre {
 
+
     @PrimaryKey
     @Getter @Setter private int id;
 
     @Getter @Setter private String name;
 
+    public Genre(int id, String name){
+        this.id = id;
+        this.name = name;
+    }
 }

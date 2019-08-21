@@ -25,4 +25,7 @@ public interface FilmixApi {
 
     @GET("{path}")
     Call<ResponseBody> getCookies(@Path("path") String path);
+
+    @GET("{path}")
+    Call<ResponseBody> getPlaylist(@Path("path") String path);
 }

@@ -9,10 +9,12 @@ import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.database.entity.Genre;
 import com.denspark.strelets.cinematrix.database.entity.StateOfLocalDB;
 
+import static androidx.room.OnConflictStrategy.REPLACE;
+
 @Dao
 public interface StateOfLocalDBdao {
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     void save(StateOfLocalDB stateOfLocalDB);
 
     @Update

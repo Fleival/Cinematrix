@@ -1,4 +1,4 @@
-package com.denspark.strelets.cinematrix.fragments;
+package com.denspark.strelets.cinematrix.view.fragments;
 
 import android.os.Bundle;
 import android.util.Log;

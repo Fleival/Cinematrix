@@ -4,159 +4,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_bg">
+    android:background="@android:color/white"
+    tools:context=".view.activities.MainActivity">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+    <!-- Custom Action Bar -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_actionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/test_shadow_gradient"
+        app:lottie_loop="true" />
+
+
+
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="#00000000"
+        android:text="LottiePlayground"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/lav_actionBar"
+        app:layout_constraintStart_toStartOf="@+id/lav_actionBar"
+        app:layout_constraintTop_toBottomOf="@+id/lav_actionBar" />
+
+    <!-- Thumbs Up Button -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_thumbUp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="false"
+        app:lottie_fileName="thumb_up.json"
+        app:lottie_loop="false"
+        app:lottie_speed="1.25" />
+
+    <!-- Thumbs Down Button (We just rotate the previous one by 180 deg ;) )-->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_thumbDown"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="8dp"
+        android:rotation="180"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="false"
+        app:lottie_fileName="thumb_up.json"
+        app:lottie_loop="false"
+        app:lottie_speed="1.25" />
+
+    <!-- Toggle Switch -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_search_to_cross"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/blured_poster"
-                android:layout_width="131dp"
-                android:layout_height="196dp"
-                android:src="@drawable/blur_poster_bg"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <ImageView
-                android:id="@+id/poster"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:src="@drawable/poster"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/blured_poster"
-                app:layout_constraintStart_toStartOf="@+id/blured_poster" />
-
-
-            <ImageView
-                android:id="@+id/footer_item_bg"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/footer_item_bg"
-                app:layout_constraintBottom_toBottomOf="@+id/blured_poster"
-                app:layout_constraintEnd_toEndOf="@+id/blured_poster"
-                app:layout_constraintStart_toStartOf="@+id/blured_poster" />
-
-            <TextView
-                android:id="@+id/movie_title_tv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/title_item_bg"
-                android:gravity="center_horizontal"
-                android:paddingTop="4dp"
-                android:text="Captain Marvel"
-                android:textColor="@color/color_text_white"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@+id/blured_poster"
-                app:layout_constraintStart_toStartOf="@+id/blured_poster"
-                app:layout_constraintTop_toTopOf="@+id/blured_poster"
-                tools:text="Captain Marvel" />
-
-            <TextView
-                android:id="@+id/movie_views_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginEnd="8dp"
-                android:drawableStart="@drawable/views_ico"
-                android:drawablePadding="4dp"
-                android:gravity="center"
-                android:text="1.35k"
-                android:textColor="@color/color_text_white"
-                android:textSize="8sp"
-                app:layout_constraintBottom_toBottomOf="@+id/footer_item_bg"
-                app:layout_constraintEnd_toEndOf="@+id/footer_item_bg"
-                app:layout_constraintTop_toTopOf="@+id/footer_item_bg"
-                tools:text="1.35k" />
-
-            <TextView
-                android:id="@+id/movie_duration_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:drawableStart="@drawable/timer_ico"
-                android:drawablePadding="4dp"
-                android:gravity="center"
-                android:text="116 min."
-                android:textColor="@color/color_text_white"
-                android:textSize="8sp"
-                app:layout_constraintBottom_toBottomOf="@+id/footer_item_bg"
-                app:layout_constraintStart_toStartOf="@+id/footer_item_bg"
-                app:layout_constraintTop_toTopOf="@+id/footer_item_bg"
-                tools:text="1.35k" />
-
-            <Button
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="4dp"
-                android:background="@drawable/rating_bg"
-                android:elevation="3dp"
-                android:text="4.8"
-                android:textColor="@color/color_text_white"
-                android:textSize="11sp"
-                app:layout_constraintEnd_toEndOf="@+id/movie_title_tv"
-                app:layout_constraintTop_toTopOf="@+id/movie_title_tv" />
-
-            <Button
-                android:id="@+id/fav_add_btn"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/ic_favorite_bg"
-                android:elevation="3dp"
-                android:text="."
-                android:textColor="@android:color/transparent"
-                android:textSize="8sp"
-                app:layout_constraintStart_toStartOf="@+id/movie_title_tv"
-                app:layout_constraintTop_toTopOf="@+id/movie_title_tv" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/movie_genre_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:drawablePadding="4dp"
-        android:gravity="center"
-        android:text="fantastic"
-        android:textColor="@color/color_text_white"
-        android:textSize="11sp"
-        app:layout_constraintStart_toStartOf="@+id/cardView"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
-        tools:text="fantastic" />
-
-    <TextView
-        android:id="@+id/movie_year_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:drawablePadding="4dp"
-        android:gravity="center"
-        android:text="2019"
-        android:textColor="@color/color_text_white"
-        android:textSize="11sp"
-        app:layout_constraintEnd_toEndOf="@+id/cardView"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
-        tools:text="2019" />
+        app:layout_constraintTop_toBottomOf="@+id/lav_thumbUp"
+        app:layout_constraintVertical_bias="0.4"
+        app:lottie_autoPlay="false"
+        app:lottie_rawRes="@raw/search_to_cross"
+        app:lottie_loop="false"
+        app:lottie_speed="1.75" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

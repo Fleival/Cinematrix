@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pls_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:background="@drawable/playlist_plate"
+    android:padding="8dp"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="500dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    tools:context=".view.activities.MovieActivity"
+    tools:showIn="@layout/activity_movie"
+    tools:visibility="invisible">
+
+    <ImageView
+        android:id="@+id/progress_indicator"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/avd_cinema_strip_roll" />
+
+    <RelativeLayout
+        android:id="@+id/playlist_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="4dp"
+        tools:listitem="@layout/translation_playlist_item" />
+
+
+</RelativeLayout>
