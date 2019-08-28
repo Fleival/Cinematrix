@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -34,7 +33,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
     private static final int FAV_BTN = 2;
     private static final int PROF_BTN = 3;
 
-    private static final int SEARCH_ICON_SHOW_MAGNEFIER = 0;
+    private static final int SEARCH_ICON_SHOW_MAGNIFIER = 0;
     private static final int SEARCH_ICON_SHOW_CROSS = 1;
 
     boolean isUp;
@@ -133,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
     private Animation bottomNavAnimation;
 
     List<CheckableSpinnerAdapter.SpinnerItem<Genre>> spinner_genre_items = new ArrayList<>();
-    CheckableSpinnerAdapter genreSpinnerAdapter;
+    CheckableSpinnerAdapter<Genre> genreSpinnerAdapter;
     ArrayAdapter<String> countryArrayAdapter;
     String[] countryNames;
     List<Genre> selected_genre_items = new ArrayList<>();
@@ -288,8 +286,8 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
         searchEtField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(count==0){
-                    flag = SEARCH_ICON_SHOW_MAGNEFIER;
+                if (count == 0) {
+                    flag = SEARCH_ICON_SHOW_MAGNIFIER;
                     changeState();
                 }
             }
@@ -510,24 +508,25 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         List<String> yearsList = new ArrayList<>();
-        yearsList.add("select");
+        yearsList.add("Все года");
         for (int i = year; i >= 1920; i--) {
             yearsList.add(String.valueOf(i));
         }
         String[] years = yearsList.toArray(new String[yearsList.size()]);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, years);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinnerYear.setAdapter(adapter);
 
         spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            int count = 0;
+
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (count >= 1) {
+                if (position < 1) {
+                    selected_year_item = null;
+                } else {
                     selected_year_item = years[position];
                 }
-                count++;
             }
 
             @Override
@@ -538,8 +537,8 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
     }
 
     private void initSpinnerGenre() {
-        String headerText = "select";
-        genreSpinnerAdapter = new CheckableSpinnerAdapter<>(this, headerText, spinner_genre_items, selected_genre_items);
+        String headerText = "Все жанры";
+        genreSpinnerAdapter = new CheckableSpinnerAdapter<>(this, headerText, "Все жанры", spinner_genre_items, selected_genre_items);
         spinnerGenre.setAdapter(genreSpinnerAdapter);
     }
 
@@ -554,25 +553,27 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
     }
 
     private void updateSpinnerCountry(List<Country> countries) {
-        countryNames =new String[countries.size()+1];
-        countryNames[0] = "select";
+        countryNames = new String[countries.size() + 1];
+        countryNames[0] = "Все страны";
         for (Country c : countries) {
             int index = countries.indexOf(c);
-            countryNames[index+1] = c.getName();
+            countryNames[index + 1] = c.getName();
         }
         countryArrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, countryNames);
-        countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        countryArrayAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinnerCountry.setAdapter(countryArrayAdapter);
 
         spinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            int count = 0;
+
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (count >= 1) {
+                if (position < 1) {
+                    selected_country_item = null;
+                }
+                else {
                     selected_country_item = countryNames[position];
                 }
-                count++;
             }
 
             @Override
@@ -583,41 +584,15 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
         countryArrayAdapter.notifyDataSetChanged();
     }
 
-//    private void initSpinnerCountry() {
-//        String headerText = "select";
-//        countryNames = new String[]{headerText, "США", "Бразилия"};
-//        countryArrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, countryNames);
-//        countryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinnerCountry.setAdapter(countryArrayAdapter);
-//
-//        spinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            int count = 0;
-//
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                if (count >= 1) {
-//                    selected_country_item = countryNames[position];
-//                }
-//                count++;
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                selected_country_item = null;
-//            }
-//        });
-//    }
-
-
     private void changeState() {
-        if (flag == SEARCH_ICON_SHOW_MAGNEFIER) {
+        if (flag == SEARCH_ICON_SHOW_MAGNIFIER) {
             searchAnimIcon.setSpeed(1.75f);
             searchAnimIcon.playAnimation();
             flag = SEARCH_ICON_SHOW_CROSS;
-        }else {
+        } else {
             searchAnimIcon.setSpeed(-1.75f);
             searchAnimIcon.playAnimation();
-            flag = SEARCH_ICON_SHOW_MAGNEFIER;
+            flag = SEARCH_ICON_SHOW_MAGNIFIER;
         }
 
     }

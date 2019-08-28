@@ -29,6 +29,10 @@ Cinematrix OVERRIDE VERSION
     android:textAlignment="inherit"
     android:textSize="16sp"
     android:paddingStart="16dp"
+    android:paddingEnd="52dp"
     android:fontFamily="@font/roboto_medium"
-    tools:text="hello spinner"
+    tools:text="Все страны мира и целой вселенной "
+    tools:background="@drawable/spinner"
+    tools:layout_width="230dp"
+    tools:layout_height="28dp"
     />

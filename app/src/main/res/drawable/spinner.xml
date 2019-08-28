@@ -4,7 +4,8 @@
         <layer-list>
             <item>
                 <bitmap android:src="@drawable/spinner_bg"
-                        android:gravity="center"/>
+                        />
+
             </item>
 
             <item android:end="10dp">

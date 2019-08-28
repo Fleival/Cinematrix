@@ -1,5 +1,3 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="video_view_exo_player_play_pause_button_dimen">72dp</dimen>
 </resources>
