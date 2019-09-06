@@ -41,9 +41,9 @@ import com.denspark.strelets.cinematrix.adapters.CheckableSpinnerAdapter;
 import com.denspark.strelets.cinematrix.database.entity.Country;
 import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.database.entity.Genre;
-import com.denspark.strelets.cinematrix.view.fragments.CategoryFragment;
-import com.denspark.strelets.cinematrix.view.fragments.ExploreFragment;
-import com.denspark.strelets.cinematrix.view.fragments.FavoriteFragment;
+import com.denspark.strelets.cinematrix.view.fragments.FilmsFragment;
+import com.denspark.strelets.cinematrix.view.fragments.RecentUpdFragment;
+import com.denspark.strelets.cinematrix.view.fragments.TvSeriesFragment;
 import com.denspark.strelets.cinematrix.view_models.FactoryViewModel;
 import com.denspark.strelets.cinematrix.view_models.MovieViewModel;
 
@@ -70,9 +70,9 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
     @Inject
     DispatchingAndroidInjector<Object> dispatchingAndroidInjector;
 
-    private static final int EXPLORE_BTN = 0;
-    private static final int CAT_BTN = 1;
-    private static final int FAV_BTN = 2;
+    private static final int RECENT_BTN = 0;
+    private static final int FILMS_BTN = 1;
+    private static final int TV_SERIES_BTN = 2;
     private static final int PROF_BTN = 3;
 
     private static final int SEARCH_ICON_SHOW_MAGNIFIER = 0;
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
     @BindView(R.id.content_fragment_placeholder)
     FrameLayout fragmentContainer;
 
-    @BindViews({R.id.explore_btn, R.id.cat_btn, R.id.fav_btn, R.id.prof_btn})
+    @BindViews({R.id.updates_btn, R.id.films_btn, R.id.tv_series_btn, R.id.prof_btn})
     List<Button> navButtons;
 
     //    @BindView(R.id.filter_spinner_year)
@@ -138,8 +138,9 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
     String selected_year_item;
     String selected_country_item;
 
-    private Fragment exploreFragment;
-    private Fragment favoriteFragment;
+    private Fragment updatesFragment;
+    private Fragment filmsFragment;
+    private Fragment tvSeriesFragment;
     LiveData<PagedList<FilmixMovie>> filterLiveData;
 
     List<Fragment> fragments = new ArrayList<>();
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
         Drawable notchIconProfile = navNotchBgWithIco.findDrawableByLayerId(R.id.notch_ico_sel_4);
         notchIconsList.add(notchIconProfile);
 
-        navButtons.get(EXPLORE_BTN).setSelected(true);
+        navButtons.get(RECENT_BTN).setSelected(true);
         checkPressedButtonStyle();
 
         bottomNavAnimation = AnimationUtils.loadAnimation(this, R.anim.bounce);
@@ -199,9 +200,9 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
             }
         });
 
-        navButtons.get(EXPLORE_BTN).setOnClickListener(clickNavButton(0));
-        navButtons.get(CAT_BTN).setOnClickListener(clickNavButton(1));
-        navButtons.get(FAV_BTN).setOnClickListener(clickNavButton(2));
+        navButtons.get(RECENT_BTN).setOnClickListener(clickNavButton(0));
+        navButtons.get(FILMS_BTN).setOnClickListener(clickNavButton(1));
+        navButtons.get(TV_SERIES_BTN).setOnClickListener(clickNavButton(2));
         navButtons.get(PROF_BTN).setOnClickListener(clickNavButton(3));
 
 
@@ -219,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
 
 
         isUp = true;
-        ExploreFragment ef = (ExploreFragment) exploreFragment;
+        FilmsFragment filmsFr = (FilmsFragment) filmsFragment;
 
         try {
             Field popup = Spinner.class.getDeclaredField("mPopup");
@@ -244,21 +245,21 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
 //                    @Override
 //                    public void onChanged(PagedList<FilmixMovie> movies) {
 //                        Log.d(TAG, "onChanged: filtered films " + movies);
-//                        ef.setPagingAdapterData(movies);
+//                        filmsFragment.setPagingAdapterData(movies);
 //                    }
 //                });
 
                 if (filterLiveData != null) {
                     filterLiveData.removeObservers(MainActivity.this);
-                    ef.removeObservers();
+                    filmsFr.removeObservers();
                 }
                 filterLiveData = movieViewModel.searchFilteredMovies(null, selected_year_item, selected_country_item, selected_genre_items);
-                ef.setOnlineMode(true);
+                filmsFr.setOnlineMode(true);
                 filterLiveData.observe(MainActivity.this, new Observer<PagedList<FilmixMovie>>() {
                     @Override
                     public void onChanged(PagedList<FilmixMovie> movies) {
                         Log.d(TAG, "onChanged: filtered films " + movies);
-                        ef.setPagingAdapterData(movies);
+                        filmsFr.setPagingAdapterData(movies);
                     }
                 });
                 filterBtn.setSelected((!filterBtn.isSelected()));
@@ -270,14 +271,14 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
             public void onClick(View v) {
 //                if (filterLiveData != null) {
 //                    filterLiveData.removeObservers(MainActivity.this);
-//                    ef.setDefaultObserver(0);
+//                    filmsFragment.setDefaultObserver(0);
 //                }
                 if (filterLiveData != null) {
                     filterLiveData.removeObservers(MainActivity.this);
                 }
-                ef.setOnlineMode(false);
-                ef.clearAdapterData();
-                ef.setDefaultObserver(0);
+                filmsFr.setOnlineMode(false);
+                filmsFr.clearAdapterData();
+                filmsFr.setDefaultObserver(0);
                 filterBtn.setSelected((!filterBtn.isSelected()));
                 onSlideViewButtonClick(filterLinearLayout);
             }
@@ -297,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
                 if (count > 2) {
                     if (filterLiveData != null) {
                         filterLiveData.removeObservers(MainActivity.this);
-                        ef.removeObservers();
+                        filmsFr.removeObservers();
                     }
 
                     filterLiveData = movieViewModel.searchFilteredMovies(s.toString(),
@@ -305,21 +306,21 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
                             selected_country_item,
                             selected_genre_items);
 
-                    ef.setOnlineMode(true);
+                    filmsFr.setOnlineMode(true);
                     filterLiveData.observe(MainActivity.this, new Observer<PagedList<FilmixMovie>>() {
                         @Override
                         public void onChanged(PagedList<FilmixMovie> movies) {
                             Log.d(TAG, "onChanged: filtered films " + movies);
-                            ef.setPagingAdapterData(movies);
+                            filmsFr.setPagingAdapterData(movies);
                         }
                     });
                 } else {
                     if (filterLiveData != null) {
                         filterLiveData.removeObservers(MainActivity.this);
                     }
-                    ef.setOnlineMode(false);
-                    ef.clearAdapterData();
-                    ef.setDefaultObserver(0);
+                    filmsFr.setOnlineMode(false);
+                    filmsFr.clearAdapterData();
+                    filmsFr.setDefaultObserver(0);
                 }
 
             }
@@ -354,15 +355,16 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
 
             switch (pos) {
                 case 0:
-                    displayFragment(ExploreFragment.class);
+                    displayFragment(RecentUpdFragment.class);
                     break;
                 case 1:
-                    displayFragment(CategoryFragment.class);
+                    displayFragment(FilmsFragment.class);
                     break;
                 case 2:
-                    displayFragment(FavoriteFragment.class);
+                    displayFragment(TvSeriesFragment.class);
                     break;
                 case 3:
+                    displayFragment(RecentUpdFragment.class);
                     break;
             }
         };
@@ -405,17 +407,17 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
     private void showFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             fragments.clear();
-            exploreFragment = new ExploreFragment();
-            fragments.add(exploreFragment);
-            Fragment categoryFragment = new CategoryFragment();
-            fragments.add(categoryFragment);
-            favoriteFragment = new FavoriteFragment();
-            fragments.add(favoriteFragment);
+            updatesFragment = new RecentUpdFragment();
+            fragments.add(updatesFragment);
+            filmsFragment = new FilmsFragment();
+            fragments.add(filmsFragment);
+            tvSeriesFragment = new TvSeriesFragment();
+            fragments.add(tvSeriesFragment);
         }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         //Show main fragment
-        ft.add(R.id.content_fragment_placeholder, exploreFragment);
+        ft.add(R.id.content_fragment_placeholder, updatesFragment);
         // Complete the changes added above
         ft.commit();
     }

@@ -64,7 +64,6 @@
                 android:background="@drawable/title_item_bg"
                 android:gravity="center_horizontal"
                 android:paddingTop="4dp"
-                android:text="Captain Marvel"
                 android:textColor="@color/color_text_white"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="@+id/blured_poster_image_view"
@@ -80,7 +79,6 @@
                 android:drawableStart="@drawable/views_ico"
                 android:drawablePadding="4dp"
                 android:gravity="center"
-                android:text="1.35k"
                 android:textColor="@color/color_text_white"
                 android:textSize="8sp"
                 app:layout_constraintBottom_toBottomOf="@+id/footer_item_bg"
@@ -96,7 +94,6 @@
                 android:drawableStart="@drawable/timer_ico"
                 android:drawablePadding="4dp"
                 android:gravity="center"
-                android:text="116 min."
                 android:textColor="@color/color_text_white"
                 android:textSize="8sp"
                 app:layout_constraintBottom_toBottomOf="@+id/footer_item_bg"
@@ -104,33 +101,61 @@
                 app:layout_constraintTop_toTopOf="@+id/footer_item_bg"
                 tools:text="116 min." />
 
-            <Button
-                android:id="@+id/rating_button"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_marginTop="24dp"
+            <RelativeLayout
+                android:layout_width="84dp"
+                android:layout_height="25dp"
                 android:layout_marginEnd="4dp"
+                android:layout_marginTop="2dp"
                 android:background="@drawable/rating_bg"
-                android:elevation="3dp"
-                android:text="4.8"
-                android:textColor="@color/color_text_white"
-                android:textSize="11sp"
-                app:layout_constraintEnd_toEndOf="@+id/movie_title_tv"
-                app:layout_constraintTop_toTopOf="@+id/movie_title_tv" />
+                app:layout_constraintStart_toStartOf="@+id/movie_title_tv"
+                app:layout_constraintTop_toBottomOf="@+id/movie_title_tv" >
+
+<!--                <ImageView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:scaleType="fitCenter"-->
+<!--                    android:src="@drawable/rating_bg"/>-->
+
+                <TextView
+                    android:id="@+id/pos_rating_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/color_text_white"
+                    android:textSize="9sp"
+                    android:text="+1420"
+                    tools:text="+1420" />
+
+                <TextView
+                    android:id="@+id/neg_rating_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="56dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/color_text_white"
+                    android:textSize="9sp"
+                    android:text="-20"
+                    tools:text="-20" />
+
+            </RelativeLayout>
+
+
 
             <Button
                 android:id="@+id/add_to_fav_button"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="2dp"
                 android:background="@drawable/ic_favorite_bg"
                 android:elevation="3dp"
-                android:text="."
-                android:textColor="@android:color/transparent"
-                android:textSize="11sp"
-                app:layout_constraintStart_toStartOf="@+id/movie_title_tv"
-                app:layout_constraintTop_toTopOf="@+id/movie_title_tv" />
+                app:layout_constraintEnd_toEndOf="@+id/movie_title_tv"
+                app:layout_constraintTop_toBottomOf="@+id/movie_title_tv" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

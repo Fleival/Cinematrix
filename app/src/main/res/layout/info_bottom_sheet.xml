@@ -10,7 +10,7 @@
     android:padding="8dp"
     app:behavior_hideable="true"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    tools:showIn="@layout/explore_fragment">
+    tools:showIn="@layout/recent_updated_fragment">
 
     <TextView
         android:layout_width="wrap_content"

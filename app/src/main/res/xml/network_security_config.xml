@@ -4,7 +4,6 @@
         <trust-anchors>
             <certificates src="system" />
             <certificates src="user" />
-
         </trust-anchors>
     </base-config>
     <debug-overrides>
@@ -12,4 +11,8 @@
             <certificates src="user" />
         </trust-anchors>
     </debug-overrides>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">82.144.210.14</domain>
+        <domain includeSubdomains="true">filmix.cc</domain>
+    </domain-config>
 </network-security-config>

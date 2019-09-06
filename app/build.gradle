@@ -39,9 +39,9 @@ android {
 }
 
 dependencies {
-    def lifecycle_version = '2.2.0-alpha03'
+    def lifecycle_version = '2.2.0-alpha04'
     def room_version = '2.1.0'
-    def appcompat_version = '1.1.0-rc01'
+    def appcompat_version = '1.1.0'
     def glide_version = '4.9.0'
     def lottieVersion = '3.0.7'
 
@@ -59,7 +59,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test.ext:truth:1.2.0'
-    androidTestImplementation "androidx.arch.core:core-testing:2.0.1"
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
 
     // Unit testing
     testImplementation 'androidx.test:runner:1.2.0'
@@ -158,4 +158,17 @@ dependencies {
     //migbase64 fast base64 library
     implementation 'com.brsanthu:migbase64:2.2'
 
+    // Firebase Authentication
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+    implementation 'com.google.firebase:firebase-core:17.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.0.0'
+
+    // Google Sign In SDK (only required for Google Sign In)
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
+    // Firebase UI
+    // Used in FirebaseUIActivity.
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
+
 }
+apply plugin: 'com.google.gms.google-services'

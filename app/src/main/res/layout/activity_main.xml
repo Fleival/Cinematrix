@@ -14,65 +14,55 @@
         android:layout_height="match_parent"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        app:layout_constraintEnd_toEndOf="@+id/cat_btn"
-        app:layout_constraintStart_toEndOf="@+id/cat_btn">
+        app:layout_constraintEnd_toEndOf="@+id/films_btn"
+        app:layout_constraintStart_toEndOf="@+id/films_btn">
 
         <Button
-            android:id="@+id/explore_btn"
+            android:id="@+id/updates_btn"
+            style="@style/NavButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_explore_bg"
-            android:fontFamily="@font/roboto_light"
-            android:gravity="bottom|center_horizontal"
-            android:paddingBottom="4dp"
-            android:stateListAnimator="@null"
-            android:text="@string/explore"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:elevation="4dp"
+            android:layout_marginEnd="1.25dp"
+            android:background="@drawable/button_updates_bg"
+            android:elevation="0dp"
+            android:text="@string/updates"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/cat_btn"
+            app:layout_constraintEnd_toStartOf="@+id/films_btn"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             tools:targetApi="lollipop" />
 
         <Button
-            android:id="@+id/cat_btn"
+            android:id="@+id/films_btn"
+            style="@style/NavButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_cat_bg"
-            android:fontFamily="@font/roboto_light"
-            android:gravity="bottom|center_horizontal"
-            android:paddingBottom="4dp"
-            android:stateListAnimator="@null"
-            android:text="@string/category"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:elevation="4dp"
+            android:layout_marginStart="1.25dp"
+            android:layout_marginEnd="1.25dp"
+            android:background="@drawable/button_films_bg"
+            android:elevation="0dp"
+            android:text="@string/films_section"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/fav_btn"
+            app:layout_constraintEnd_toStartOf="@+id/tv_series_btn"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/explore_btn"
+            app:layout_constraintStart_toEndOf="@+id/updates_btn"
             tools:targetApi="lollipop" />
 
 
         <Button
-            android:id="@+id/fav_btn"
+            android:id="@+id/tv_series_btn"
+            style="@style/NavButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_fav_bg"
-            android:fontFamily="@font/roboto_light"
-            android:gravity="bottom|center_horizontal"
-            android:paddingBottom="4dp"
-            android:stateListAnimator="@null"
-            android:text="@string/favorite"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:elevation="4dp"
+            android:layout_marginStart="1.25dp"
+            android:layout_marginEnd="1.25dp"
+            android:background="@drawable/button_tv_series_bg"
+            android:elevation="0dp"
+            android:text="@string/tv_series_section"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/prof_btn"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/cat_btn"
+            app:layout_constraintStart_toEndOf="@+id/films_btn"
             tools:targetApi="lollipop" />
 
 
@@ -88,21 +78,17 @@
 
         <Button
             android:id="@+id/prof_btn"
+            style="@style/NavButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="1.25dp"
             android:background="@drawable/button_prof_bg"
-            android:fontFamily="@font/roboto_light"
-            android:gravity="bottom|center_horizontal"
-            android:paddingBottom="4dp"
-            android:stateListAnimator="@null"
+            android:elevation="0dp"
             android:text="@string/my_profile"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:elevation="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/fav_btn"
+            app:layout_constraintStart_toEndOf="@+id/tv_series_btn"
             tools:targetApi="lollipop" />
 
 
@@ -122,42 +108,45 @@
             android:background="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/button_notch_bg" />
+            app:layout_constraintTop_toTopOf="@id/button_notch_bg"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/button_notch_bg"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="55dp"
+            android:layout_height="16dp"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/ic_head"
             android:elevation="2dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/button_notch_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@color/colorPrimaryDark" />
+
 
         <ImageView
             android:id="@+id/nav_notch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18.2dp"
-            android:elevation="5dp"
-            app:layout_constraintEnd_toEndOf="@+id/explore_btn"
-            app:layout_constraintStart_toStartOf="@+id/explore_btn"
+            android:layout_marginTop="16dp"
+            android:elevation="2dp"
+            app:layout_constraintEnd_toEndOf="@+id/updates_btn"
+            app:layout_constraintHorizontal_bias="0.571"
+            app:layout_constraintStart_toStartOf="@+id/updates_btn"
             app:layout_constraintTop_toTopOf="@+id/button_notch_bg"
             app:srcCompat="@drawable/nav_notch_with_ico" />
-
 
         <LinearLayout
             android:id="@+id/filter_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimaryDarker"
-            android:orientation="vertical"
             android:elevation="2dp"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@+id/appBarLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -171,10 +160,10 @@
                     android:id="@+id/filter_spinner_year"
                     android:layout_width="230dp"
                     android:layout_height="28dp"
-                    android:elevation="3dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="8dp"
+                    android:elevation="3dp" />
 
                 <TextView
                     android:id="@+id/filter_year_label"
@@ -197,10 +186,10 @@
                     android:id="@+id/filter_spinner_genre"
                     android:layout_width="230dp"
                     android:layout_height="28dp"
-                    android:layout_marginEnd="8dp"
-                    android:elevation="3dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="8dp"
+                    android:elevation="3dp" />
 
                 <TextView
                     android:id="@+id/filter_genre_label"
@@ -224,10 +213,10 @@
                     android:id="@+id/filter_spinner_country"
                     android:layout_width="230dp"
                     android:layout_height="28dp"
-                    android:layout_marginEnd="8dp"
-                    android:elevation="3dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="8dp"
+                    android:elevation="3dp" />
 
                 <TextView
                     android:id="@+id/filter_country_label"

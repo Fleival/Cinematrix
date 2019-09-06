@@ -9,12 +9,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -23,6 +23,9 @@ import com.denspark.strelets.cinematrix.R;
 import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.glide.GlideApp;
 import com.denspark.strelets.cinematrix.utils.DimensionUtils;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.SupportRSBlurTransformation;
 
 public class MoviePagingAdapter extends PagedListAdapter<FilmixMovie, MoviePagingAdapter.MovieHolder> {
@@ -38,7 +41,6 @@ public class MoviePagingAdapter extends PagedListAdapter<FilmixMovie, MoviePagin
         @BindView(R.id.movie_duration_tv) TextView durationTextView;
 
         @BindView(R.id.add_to_fav_button) Button addToFavButton;
-        @BindView(R.id.rating_button) Button ratingButton;
 
         @BindView(R.id.blured_poster_image_view) ImageView bluredPosterImageView;
         @BindView(R.id.poster_image_view) ImageView posterImageView;

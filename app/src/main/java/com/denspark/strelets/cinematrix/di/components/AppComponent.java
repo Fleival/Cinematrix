@@ -6,22 +6,23 @@ import android.app.Application;
 import com.denspark.strelets.cinematrix.App;
 import com.denspark.strelets.cinematrix.di.module.ActivityModule;
 import com.denspark.strelets.cinematrix.di.module.AppModule;
-import com.denspark.strelets.cinematrix.di.module.ExploreFragmentModule;
+import com.denspark.strelets.cinematrix.di.module.FilmsFragmentModule;
 import com.denspark.strelets.cinematrix.di.module.MovieActivityModule;
+import com.denspark.strelets.cinematrix.di.module.TvSeriesFragmentModule;
 
 import javax.inject.Singleton;
 
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.AndroidInjectionModule;
-import dagger.android.support.AndroidSupportInjectionModule;
 
 
 @Singleton
 @Component(modules={
         AndroidInjectionModule.class,
         ActivityModule.class,
-        ExploreFragmentModule.class,
+        FilmsFragmentModule.class,
+        TvSeriesFragmentModule.class,
         AppModule.class,
         MovieActivityModule.class
 })

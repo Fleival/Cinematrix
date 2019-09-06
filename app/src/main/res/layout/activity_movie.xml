@@ -333,6 +333,45 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+            <RelativeLayout
+                android:layout_width="120dp"
+                android:layout_height="46dp"
+                android:background="@drawable/rating_bg_big"
+                android:layout_marginBottom="4dp"
+                app:layout_constraintBottom_toBottomOf="@+id/movie_bl_bg"
+                app:layout_constraintEnd_toStartOf="@+id/movie_poster"
+                app:layout_constraintStart_toStartOf="parent">
+
+
+                <TextView
+                    android:id="@+id/pos_rating_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/color_text_white"
+                    android:textSize="12sp"
+                    android:text="+1420"
+                    tools:text="+1420" />
+
+                <TextView
+                    android:id="@+id/neg_rating_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="80dp"
+                    android:layout_marginTop="23dp"
+                    android:textColor="@color/color_text_white"
+                    android:textSize="12sp"
+                    android:text="-20"
+                    tools:text="-20" />
+
+            </RelativeLayout>
+
             <Button
                 android:id="@+id/play_btn"
                 android:layout_width="wrap_content"
