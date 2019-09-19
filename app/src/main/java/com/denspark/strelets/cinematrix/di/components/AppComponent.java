@@ -8,6 +8,8 @@ import com.denspark.strelets.cinematrix.di.module.ActivityModule;
 import com.denspark.strelets.cinematrix.di.module.AppModule;
 import com.denspark.strelets.cinematrix.di.module.FilmsFragmentModule;
 import com.denspark.strelets.cinematrix.di.module.MovieActivityModule;
+import com.denspark.strelets.cinematrix.di.module.ProfileFragmentModule;
+import com.denspark.strelets.cinematrix.di.module.RecentUpdFragmentModule;
 import com.denspark.strelets.cinematrix.di.module.TvSeriesFragmentModule;
 
 import javax.inject.Singleton;
@@ -22,6 +24,8 @@ import dagger.android.AndroidInjectionModule;
         AndroidInjectionModule.class,
         ActivityModule.class,
         FilmsFragmentModule.class,
+        ProfileFragmentModule.class,
+        RecentUpdFragmentModule.class,
         TvSeriesFragmentModule.class,
         AppModule.class,
         MovieActivityModule.class

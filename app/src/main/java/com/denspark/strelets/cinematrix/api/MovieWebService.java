@@ -3,13 +3,15 @@ package com.denspark.strelets.cinematrix.api;
 import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.database.entity.Genre;
 import com.denspark.strelets.cinematrix.database.entity.Person;
+import com.denspark.strelets.cinematrix.database.entity.Rating;
 import com.denspark.strelets.cinematrix.database.entity.StateOfRemoteDB;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-
-import java.util.List;
 
 public interface MovieWebService {
     @GET("/filmix/get_films")
@@ -58,4 +60,22 @@ public interface MovieWebService {
 
     @GET("/filmix/countries")
     Call<List<String>> loadCountryList();
+
+    @GET("/filmix/rating_for_film")
+    Call<Rating> getRatingForFilm(@Query("id") int filmId);
+
+    @GET("/filmix/top_films")
+    Call<List<FilmixMovie>> getPopularFilms(
+            @Query("page") int page,
+            @Query("limit")int maxResult );
+
+    @GET("/filmix/last_movies")
+    Call<List<FilmixMovie>> getLastMovies(
+            @Query("page") int page,
+            @Query("limit")int maxResult );
+
+    @GET("/filmix/last_tv_series")
+    Call<List<FilmixMovie>> getLastTvSeries(
+            @Query("page") int page,
+            @Query("limit")int maxResult );
 }

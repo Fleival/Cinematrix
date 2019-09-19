@@ -1,18 +1,26 @@
 package com.denspark.strelets.cinematrix.di.module;
 
 import android.app.Application;
+
 import com.denspark.strelets.cinematrix.api.MovieWebService;
 import com.denspark.strelets.cinematrix.database.MovieDatabase;
-import com.denspark.strelets.cinematrix.database.dao.*;
+import com.denspark.strelets.cinematrix.database.dao.CountryDao;
+import com.denspark.strelets.cinematrix.database.dao.GenreDao;
+import com.denspark.strelets.cinematrix.database.dao.MovieDao;
+import com.denspark.strelets.cinematrix.database.dao.MovieGenreDao;
+import com.denspark.strelets.cinematrix.database.dao.PersonDao;
+import com.denspark.strelets.cinematrix.database.dao.PersonMovieDao;
+import com.denspark.strelets.cinematrix.database.dao.RatingDao;
+import com.denspark.strelets.cinematrix.database.dao.StateOfLocalDBdao;
+import com.denspark.strelets.cinematrix.database.dao.StateOfRemoteDBdao;
 import com.denspark.strelets.cinematrix.repository.MovieRepository;
-import com.google.gson.*;
-import dagger.Module;
-import dagger.Provides;
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
-import javax.inject.Singleton;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +29,14 @@ import java.util.TimeZone;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module(includes = ViewModelModule.class)
 public class AppModule {
@@ -88,6 +104,12 @@ public class AppModule {
         return database.countryDao();
     }
 
+    @Provides
+    @Singleton
+    RatingDao provideRatingDao(MovieDatabase database) {
+        return database.ratingDao();
+    }
+
     // --- REPOSITORY INJECTION ---
 
     @Provides
@@ -106,6 +128,7 @@ public class AppModule {
             MovieGenreDao movieGenreDao,
             StateOfRemoteDBdao stateOfRemoteDBdao,
             StateOfLocalDBdao stateOfLocalDBdao,
+            RatingDao ratingDao,
             MovieWebService webservice,
             Executor executor) {
 
@@ -118,6 +141,7 @@ public class AppModule {
                 movieGenreDao,
                 stateOfRemoteDBdao,
                 stateOfLocalDBdao,
+                ratingDao,
                 webservice,
                 executor);
     }

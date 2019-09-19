@@ -11,7 +11,6 @@ import com.denspark.strelets.cinematrix.database.entity.Country;
 import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.database.entity.Genre;
 import com.denspark.strelets.cinematrix.database.entity.Person;
-import com.denspark.strelets.cinematrix.repository.FilmsSearchDataSource;
 import com.denspark.strelets.cinematrix.repository.MovieRepository;
 
 import java.util.List;
@@ -28,6 +27,9 @@ public class MovieViewModel extends ViewModel {
     private MovieRepository repository;
     private LiveData<PagedList<FilmixMovie>> allMovies;
     private LiveData<PagedList<FilmixMovie>> filteredMovies;
+    private LiveData<PagedList<FilmixMovie>> popularMovies;
+    private LiveData<PagedList<FilmixMovie>> lastMovies;
+    private LiveData<PagedList<FilmixMovie>> lastTvSeries;
     private FilmixMovie currentMovie;
     private LiveData<FilmixMovie> currentLiveDataMovie;
 
@@ -38,6 +40,14 @@ public class MovieViewModel extends ViewModel {
             .setPageSize(Constants.PAGE_SIZE)
             .setInitialLoadSizeHint(Constants.PAGE_INITIAL_LOAD_SIZE_HINT)
             .setPrefetchDistance(Constants.PAGE_PREFETCH_DISTANCE)
+            .setEnablePlaceholders(true)
+            .build();
+
+    private final static PagedList.Config config_online_mode
+            = new PagedList.Config.Builder()
+            .setPageSize(Constants.PAGE_SIZE_ONLINE_MODE)
+            .setInitialLoadSizeHint(Constants.PAGE_INITIAL_LOAD_SIZE_HINT_ONLINE_MODE)
+            .setPrefetchDistance(Constants.PAGE_PREFETCH_DISTANCE_ONLINE_MODE)
             .setEnablePlaceholders(true)
             .build();
 
@@ -217,5 +227,20 @@ public class MovieViewModel extends ViewModel {
 
     public LiveData<List<Country>> getCountryLiveData(){
         return repository.getCountryLiveData();
+    }
+
+    public LiveData<PagedList<FilmixMovie>> getPopularMovies() {
+        popularMovies = repository.getPopularMovies(config_online_mode);
+        return popularMovies;
+    }
+
+    public LiveData<PagedList<FilmixMovie>> getLastMovies() {
+        lastMovies = repository.getLastMovies(config_online_mode);
+        return lastMovies;
+    }
+
+    public LiveData<PagedList<FilmixMovie>> getLastTvSeries() {
+        lastTvSeries = repository.getLastTvSeries(config_online_mode);
+        return lastTvSeries;
     }
 }

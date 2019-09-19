@@ -5,10 +5,8 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.paging.PagedListAdapter;
@@ -28,31 +26,30 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.SupportRSBlurTransformation;
 
-public class MoviePagingAdapter extends PagedListAdapter<FilmixMovie, MoviePagingAdapter.MovieHolder> {
+public class HorizontalBigMoviesAdapter extends PagedListAdapter<FilmixMovie, HorizontalBigMoviesAdapter.MovieHolder> {
 
-    private MoviePagingAdapterListener listener;
+    private HorizontalAdapterListener listener;
 
     public class MovieHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.movie_title_upd_big_tv)
+        TextView titleTextView;
+        @BindView(R.id.movie_duration_upd_big_tv)
+        TextView durationTextView;
+        @BindView(R.id.movie_year_upd_big_tv)
+        TextView yearTextView;
+        @BindView(R.id.pos_rating_value_upd_big)
+        TextView posTextView;
+        @BindView(R.id.neg_rating_value_upd_big)
+        TextView negTextView;
+        @BindView(R.id.blured_poster_upd_big_image_view)
+        ImageView bluredPosterImageView;
+        @BindView(R.id.poster_upd_big_image_view)
+        ImageView posterImageView;
 
-        @BindView(R.id.movie_title_tv) TextView titleTextView;
-//        @BindView(R.id.movie_genre_tv) TextView genreTextView;
-        @BindView(R.id.movie_views_tv) TextView viewsTextView;
-        @BindView(R.id.movie_year_tv) TextView yearTextView;
-        @BindView(R.id.movie_duration_tv) TextView durationTextView;
-        @BindView(R.id.pos_rating_value) TextView posRatingValueTextView;
-        @BindView(R.id.neg_rating_value) TextView negRatingValueTextView;
-
-        @BindView(R.id.add_to_fav_button) Button addToFavButton;
-
-        @BindView(R.id.blured_poster_image_view) ImageView bluredPosterImageView;
-        @BindView(R.id.poster_image_view) ImageView posterImageView;
-
-
-        public MovieHolder(View movieItem) {
-            super(movieItem);
-            ButterKnife.bind(this, movieItem);
-
-            movieItem.setOnClickListener(new View.OnClickListener() {
+        public MovieHolder(@NonNull View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
@@ -64,12 +61,11 @@ public class MoviePagingAdapter extends PagedListAdapter<FilmixMovie, MoviePagin
         }
     }
 
-
-    public MoviePagingAdapter(MoviePagingAdapterListener listener) {
+    public HorizontalBigMoviesAdapter(HorizontalAdapterListener listener) {
         super(DIFF_CALLBACK);
         this.listener = listener;
-
     }
+
     private static final DiffUtil.ItemCallback<FilmixMovie> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<FilmixMovie>() {
                 @Override
@@ -98,12 +94,15 @@ public class MoviePagingAdapter extends PagedListAdapter<FilmixMovie, MoviePagin
                 }
             };
 
-    @NonNull @Override public MovieHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie, parent, false);
-        return new MovieHolder(itemView);
+    @NonNull
+    @Override
+    public MovieHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_upd_big, parent, false);
+        return new HorizontalBigMoviesAdapter.MovieHolder(itemView);
     }
 
-    @Override public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
+    @Override
+    public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
         FilmixMovie currentMovie = getItem(position);
         if (currentMovie != null) {
 
@@ -111,18 +110,17 @@ public class MoviePagingAdapter extends PagedListAdapter<FilmixMovie, MoviePagin
             Context context = holder.bluredPosterImageView.getContext();
 
             holder.titleTextView.setText(currentMovie.getName());
-//            holder.genreTextView.setText("genre to do");
-            holder.viewsTextView.setText("0");
             holder.yearTextView.setText(currentMovie.getYear());
             holder.durationTextView.setText(currentMovie.getDuration());
-            holder.posRatingValueTextView.setText(" +"+currentMovie.getPosRating());
-            holder.negRatingValueTextView.setText(" -"+currentMovie.getNegRating());
+
+            holder.posTextView.setText(" +"+ currentMovie.getPosRating());
+            holder.negTextView.setText(" -"+ currentMovie.getNegRating());
 
             MultiTransformation<Bitmap> bitmapMultiTransformation =
                     new MultiTransformation<>(
                             new CenterCrop(),
                             new SupportRSBlurTransformation(10, 1),
-                            new RoundedCorners(DimensionUtils.dpToPx(context, 3))
+                            new RoundedCorners(DimensionUtils.dpToPx(context, 2))
 
                     );
 
@@ -139,35 +137,15 @@ public class MoviePagingAdapter extends PagedListAdapter<FilmixMovie, MoviePagin
                     .load(currentMovie.getFilmPosterUrl())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.poster_default)
-                    .transform(new RoundedCorners(DimensionUtils.dpToPx(context, 7)))
+                    .transform(new RoundedCorners(DimensionUtils.dpToPx(context, 4)))
                     .override(340, 433)
                     .into(holder.posterImageView);
 
-            View.OnClickListener addToFavoriteClick = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.addToFavButton.setSelected(!holder.addToFavButton.isSelected());
-                    if (holder.addToFavButton.isSelected()) {
-                        Toast.makeText(context, "Movie added to favorite", Toast.LENGTH_SHORT).show();
-                    } else if (!holder.addToFavButton.isSelected()) {
-                        Toast.makeText(context, "Movie removed from favorite", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            };
-
-            holder.addToFavButton.setOnClickListener(addToFavoriteClick);
         }
     }
-    public FilmixMovie getMovie(int position) {
+
+    private FilmixMovie getMovie(int position) {
         return getItem(position);
-    }
-
-    public FilmixMovie getLastMovie(){
-        return getItem(getItemCount());
-    }
-
-    public interface MoviePagingAdapterListener {
-        void onMovieClick(FilmixMovie movie);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.denspark.strelets.cinematrix.repository;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.denspark.strelets.cinematrix.database.dao.MovieDao;
 import com.denspark.strelets.cinematrix.database.dao.MovieGenreDao;
 import com.denspark.strelets.cinematrix.database.dao.PersonDao;
 import com.denspark.strelets.cinematrix.database.dao.PersonMovieDao;
+import com.denspark.strelets.cinematrix.database.dao.RatingDao;
 import com.denspark.strelets.cinematrix.database.dao.StateOfLocalDBdao;
 import com.denspark.strelets.cinematrix.database.dao.StateOfRemoteDBdao;
 import com.denspark.strelets.cinematrix.database.entity.ContainerEntity;
@@ -51,6 +53,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.denspark.strelets.cinematrix.repository.DataSourceType.fromString;
+
 //Repository Version = 0.1beta
 @Singleton
 public class MovieRepository {
@@ -67,6 +71,7 @@ public class MovieRepository {
     private final MovieGenreDao movieGenreDao;
     private final StateOfRemoteDBdao stateOfRemoteDBdao;
     private final StateOfLocalDBdao stateOfLocalDBdao;
+    private final RatingDao ratingDao;
     private final Executor executor;
     private final MovieWebService webservice;
     private StateOfLocalDB currentStateOfLocalDB;
@@ -84,6 +89,7 @@ public class MovieRepository {
             MovieGenreDao movieGenreDao,
             StateOfRemoteDBdao stateOfRemoteDBdao,
             StateOfLocalDBdao stateOfLocalDBdao,
+            RatingDao ratingDao,
             MovieWebService webservice,
             Executor executor) {
 
@@ -95,6 +101,7 @@ public class MovieRepository {
         this.movieGenreDao = movieGenreDao;
         this.stateOfRemoteDBdao = stateOfRemoteDBdao;
         this.stateOfLocalDBdao = stateOfLocalDBdao;
+        this.ratingDao = ratingDao;
         this.webservice = webservice;
         this.executor = executor;
 
@@ -132,6 +139,7 @@ public class MovieRepository {
 
     private MoviesBoundaryCallback boundaryCallback = new MoviesBoundaryCallback(this);
 
+    @SuppressLint("NewApi")
     public LiveData<PagedList<FilmixMovie>> getAllMovies(PagedList.Config config) {
         DataSource.Factory<Integer, FilmixMovie> factory = movieDao.getAllMoviesPaged();
         return new LivePagedListBuilder<>(factory, config).setBoundaryCallback(boundaryCallback).build();
@@ -192,6 +200,7 @@ public class MovieRepository {
             }
         });
 
+
         return filmixMovieMediatorLiveData;
     }
 
@@ -241,6 +250,7 @@ public class MovieRepository {
             }
         }
     }
+
 
     private void saveGenresForEntity(
             ContainerEntity personOrMovie,
@@ -366,10 +376,11 @@ public class MovieRepository {
         private PersonDao personDao;
         private PersonMovieDao personMovieDao;
         private MovieGenreDao movieGenreDao;
+        private RatingDao ratingDao;
         private MovieWebService webservice;
         private MoviesBoundaryCallback boundaryCallback;
 
-        private SaveDataForMovieAsyncTask(MovieDao movieDao, PersonDao personDao, GenreDao genreDao, PersonMovieDao personMovieDao, MovieGenreDao movieGenreDao, MovieWebService webservice, MoviesBoundaryCallback boundaryCallback) {
+        private SaveDataForMovieAsyncTask(MovieDao movieDao, PersonDao personDao, GenreDao genreDao, PersonMovieDao personMovieDao, MovieGenreDao movieGenreDao, RatingDao ratingDao, MovieWebService webservice, MoviesBoundaryCallback boundaryCallback) {
             this.movieDao = movieDao;
             this.movieGenreDao = movieGenreDao;
             this.genreDao = genreDao;
@@ -377,6 +388,7 @@ public class MovieRepository {
             this.webservice = webservice;
             this.personDao = personDao;
             this.personMovieDao = personMovieDao;
+            this.ratingDao = ratingDao;
         }
 
 
@@ -395,9 +407,11 @@ public class MovieRepository {
 //                MovieRepository.this.saveActorsForMovie(movie, actorIds, actorsInFilm);
 //                saveActorsForMovie(movie, actorIds, actorsInFilm);
 
+
             }
             return null;
         }
+
 
         @Override
         protected void onPostExecute(Void aVoid) {
@@ -470,7 +484,7 @@ public class MovieRepository {
                                 executor.execute(() -> stateOfLocalDBdao.save(currentStateOfLocalDB));
 
                                 SaveDataForMovieAsyncTask asyncTask = new
-                                        SaveDataForMovieAsyncTask(movieDao, personDao, genreDao, personMovieDao, movieGenreDao, webservice, boundaryCallback);
+                                        SaveDataForMovieAsyncTask(movieDao, personDao, genreDao, personMovieDao, movieGenreDao, ratingDao, webservice, boundaryCallback);
                                 asyncTask.execute(listResponse);
 
                                 callback.recordSuccess();
@@ -516,7 +530,7 @@ public class MovieRepository {
                                 executor.execute(() -> stateOfLocalDBdao.save(currentStateOfLocalDB));
 
                                 SaveDataForMovieAsyncTask asyncTask = new
-                                        SaveDataForMovieAsyncTask(movieDao, personDao, genreDao, personMovieDao, movieGenreDao, webservice, boundaryCallback);
+                                        SaveDataForMovieAsyncTask(movieDao, personDao, genreDao, personMovieDao, movieGenreDao, ratingDao, webservice, boundaryCallback);
                                 asyncTask.execute(listResponse);
 
                                 callback.recordSuccess();
@@ -568,7 +582,22 @@ public class MovieRepository {
         });
     }
 
-    public LiveData<List<Country>> getCountryLiveData(){
+    public LiveData<List<Country>> getCountryLiveData() {
         return countryDao.getAllCountries();
+    }
+
+    public LiveData<PagedList<FilmixMovie>> getPopularMovies(PagedList.Config config) {
+        FilmsServerDataSourceFactory filmsServerDataSourceFactory = new FilmsServerDataSourceFactory(webservice,30, fromString("POPULAR_MOVIES"));
+        return new LivePagedListBuilder<Integer, FilmixMovie>(filmsServerDataSourceFactory, config).setFetchExecutor(executor).build();
+    }
+
+    public LiveData<PagedList<FilmixMovie>> getLastMovies(PagedList.Config config) {
+        FilmsServerDataSourceFactory filmsServerDataSourceFactory = new FilmsServerDataSourceFactory(webservice,30, fromString("LAST_MOVIES"));
+        return new LivePagedListBuilder<Integer, FilmixMovie>(filmsServerDataSourceFactory, config).setFetchExecutor(executor).build();
+    }
+
+    public LiveData<PagedList<FilmixMovie>> getLastTvSeries(PagedList.Config config) {
+        FilmsServerDataSourceFactory filmsServerDataSourceFactory = new FilmsServerDataSourceFactory(webservice,30, fromString("LAST_TV_SERIES"));
+        return new LivePagedListBuilder<Integer, FilmixMovie>(filmsServerDataSourceFactory, config).setFetchExecutor(executor).build();
     }
 }

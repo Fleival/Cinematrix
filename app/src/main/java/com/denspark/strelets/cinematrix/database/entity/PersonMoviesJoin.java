@@ -2,11 +2,14 @@ package com.denspark.strelets.cinematrix.database.entity;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity(tableName = "person_movie_join",
         primaryKeys = {"personId", "movieId"},
+        indices = {@Index("personId"),@Index("movieId")},
         foreignKeys = {
                 @ForeignKey(entity = Person.class,
                         parentColumns = "id",

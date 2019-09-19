@@ -1,23 +1,39 @@
 package com.denspark.strelets.cinematrix.di.module;
 
 import android.content.Context;
+
 import com.denspark.strelets.cinematrix.api.MovieWebService;
 import com.denspark.strelets.cinematrix.database.MovieDatabase;
-import com.denspark.strelets.cinematrix.database.dao.*;
+import com.denspark.strelets.cinematrix.database.dao.CountryDao;
+import com.denspark.strelets.cinematrix.database.dao.GenreDao;
+import com.denspark.strelets.cinematrix.database.dao.MovieDao;
+import com.denspark.strelets.cinematrix.database.dao.MovieGenreDao;
+import com.denspark.strelets.cinematrix.database.dao.PersonDao;
+import com.denspark.strelets.cinematrix.database.dao.PersonMovieDao;
+import com.denspark.strelets.cinematrix.database.dao.RatingDao;
+import com.denspark.strelets.cinematrix.database.dao.StateOfLocalDBdao;
+import com.denspark.strelets.cinematrix.database.dao.StateOfRemoteDBdao;
 import com.denspark.strelets.cinematrix.repository.MovieRepository;
-import com.google.gson.*;
-import dagger.Module;
-import dagger.Provides;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
-import javax.inject.Singleton;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class JTestingModule {
@@ -101,6 +117,7 @@ public class JTestingModule {
             MovieGenreDao movieGenreDao,
             StateOfRemoteDBdao stateOfRemoteDBdao,
             StateOfLocalDBdao stateOfLocalDBdao,
+            RatingDao ratingDao,
             MovieWebService webservice,
             Executor executor) {
 
@@ -113,6 +130,7 @@ public class JTestingModule {
                 movieGenreDao,
                 stateOfRemoteDBdao,
                 stateOfLocalDBdao,
+                ratingDao,
                 webservice,
                 executor);
     }

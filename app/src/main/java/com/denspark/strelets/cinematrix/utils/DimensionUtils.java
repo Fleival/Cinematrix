@@ -19,7 +19,7 @@ public class DimensionUtils {
         return (int) (px / pixelsPerOneDp);
     }
 
-    public static int dpToPx(Context context, int dp) {
+    public static int dpToPx(Context context, float dp) {
         if (!isInitialised) {
             initialise(context);
         }

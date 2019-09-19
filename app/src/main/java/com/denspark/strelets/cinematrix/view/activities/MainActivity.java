@@ -42,6 +42,7 @@ import com.denspark.strelets.cinematrix.database.entity.Country;
 import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.database.entity.Genre;
 import com.denspark.strelets.cinematrix.view.fragments.FilmsFragment;
+import com.denspark.strelets.cinematrix.view.fragments.ProfileFragment;
 import com.denspark.strelets.cinematrix.view.fragments.RecentUpdFragment;
 import com.denspark.strelets.cinematrix.view.fragments.TvSeriesFragment;
 import com.denspark.strelets.cinematrix.view_models.FactoryViewModel;
@@ -141,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
     private Fragment updatesFragment;
     private Fragment filmsFragment;
     private Fragment tvSeriesFragment;
+    private Fragment profileFragment;
     LiveData<PagedList<FilmixMovie>> filterLiveData;
 
     List<Fragment> fragments = new ArrayList<>();
@@ -364,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
                     displayFragment(TvSeriesFragment.class);
                     break;
                 case 3:
-                    displayFragment(RecentUpdFragment.class);
+                    displayFragment(ProfileFragment.class);
                     break;
             }
         };
@@ -413,6 +415,8 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
             fragments.add(filmsFragment);
             tvSeriesFragment = new TvSeriesFragment();
             fragments.add(tvSeriesFragment);
+            profileFragment = new ProfileFragment();
+            fragments.add(profileFragment);
         }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

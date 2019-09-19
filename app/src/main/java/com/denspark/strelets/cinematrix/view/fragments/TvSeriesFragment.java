@@ -44,54 +44,54 @@ import dagger.android.support.AndroidSupportInjection;
 
 public class TvSeriesFragment extends Fragment implements
         MoviePagingAdapter.MoviePagingAdapterListener {
-public static final int VIEW_MOVIE_REQUEST = 1;
-private Unbinder unbinder;
+    public static final int VIEW_MOVIE_REQUEST = 1;
+    private Unbinder unbinder;
 
 
-private static final String TAG = "FilmsFragment";
+    private static final String TAG = "FilmsFragment";
 
-@Inject
-FactoryViewModel viewModelFactory;
+    @Inject
+    FactoryViewModel viewModelFactory;
 
-private MovieViewModel movieViewModel;
-private MoviePagingAdapter pagingAdapter;
+    private MovieViewModel movieViewModel;
+    private MoviePagingAdapter pagingAdapter;
 
-@BindView(R.id.recycler_view)
-RecyclerView recyclerView;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
 
-@BindView(R.id.retry_refresh)
-Button retryBtn;
+    @BindView(R.id.retry_refresh)
+    Button retryBtn;
 
-@BindView(R.id.swipe_to_refresh_layout)
-SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.swipe_to_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
-            LinearLayout llBottomSheet;
-            BottomSheetBehavior bottomSheetBehavior;
+    LinearLayout llBottomSheet;
+    BottomSheetBehavior bottomSheetBehavior;
 
-@BindView(R.id.lav_loading_new_content)
+    @BindView(R.id.lav_loading_new_content)
     LottieAnimationView mainLoadingAnimation;
 
-@BindView(R.id.lav_progress_indicator)
+    @BindView(R.id.lav_progress_indicator)
     LottieAnimationView progressLoadingAnimation;
 
-            LottieAnimationHelper mainAnimationHelper;
+    LottieAnimationHelper mainAnimationHelper;
 
-            LottieAnimationHelper progressAnimationHelper;
+    LottieAnimationHelper progressAnimationHelper;
 
-private LiveData<PagedList<FilmixMovie>> currentRVliveData;
+    private LiveData<PagedList<FilmixMovie>> currentRVliveData;
 
-public TvSeriesFragment() {
-        }
+    public TvSeriesFragment() {
+    }
 
-@Nullable
-@Override
-public View onCreateView(@NonNull LayoutInflater inflater,
-@Nullable ViewGroup container,
-@Nullable Bundle savedInstanceState) {
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.tvseries_fragment,
-        container, false);
+                container, false);
         unbinder = ButterKnife.bind(this, view);
 
         pagingAdapter = new MoviePagingAdapter(this);// TODO: 23.05.2019 make OnClickListener in adapter
@@ -112,138 +112,139 @@ public View onCreateView(@NonNull LayoutInflater inflater,
         bottomSheetBehavior.setSkipCollapsed(true);
 
         retryBtn.setOnClickListener(new View.OnClickListener() {
-@Override
-public void onClick(View v) {
-        Toast.makeText(App.context, "attempt to receive data", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "retryDataTransmission: " + movieViewModel.retryDataTransmission());
-        }
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(App.context, "attempt to receive data", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "retryDataTransmission: " + movieViewModel.retryDataTransmission());
+            }
         });
         mainAnimationHelper.playInfiniteAnimation();
 
         return view;
-        }
+    }
 
 
-private void initSwipeToRefreshLayout() {
+    private void initSwipeToRefreshLayout() {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-@Override
-public void onRefresh() {
-        reInitViewModelData();
-        mainAnimationHelper.playInfiniteAnimation();
+            @Override
+            public void onRefresh() {
+                reInitViewModelData();
+                mainAnimationHelper.playInfiniteAnimation();
 //                mMainVectorAnimationHelper.showWorkingInProgressInstead();
-        swipeRefreshLayout.setRefreshing(false);
-        }
+                swipeRefreshLayout.setRefreshing(false);
+            }
         });
-        }
+    }
 
 
-@Override
-public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         this.configureDagger();
         this.configureViewModel();
-        }
+    }
 
-private void configureDagger() {
+    private void configureDagger() {
         AndroidSupportInjection.inject(this);
-        }
+    }
 
 
-private void configureViewModel() {
+    private void configureViewModel() {
         movieViewModel = new ViewModelProvider(getActivity(), viewModelFactory)
-        .get(MovieViewModel.class);
+                .get(MovieViewModel.class);
 
 
         currentRVliveData = movieViewModel.getMovies();
 
         setDefaultObserver(0);
         movieViewModel.networkStateMessage().observe(getActivity(), new Observer<String>() {
-@Override
-public void onChanged(String s) {
-        if (s.equals("MOVIES_ERROR")) {
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        }
-        if (s.equals("ATTEMPT_TO_RECEIVE_DATA")) {
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        }
-        if (s.equals("MOVIES_RECEIVED")) {
-        setDefaultObserver(null);
-        progressAnimationHelper.stopInfiniteAnimation();
-        Log.d(TAG, "movies data received successfully");
-        }
-        if (s.equals("MOVIES_UPDATING")) {
-        removeObservers();
-        if (!mainAnimationHelper.isInProgress())
-        progressAnimationHelper.playInfiniteAnimation();
-        Log.d(TAG, "movies data is receiving in progress");
-        }
+            @Override
+            public void onChanged(String s) {
+                if (s.equals("MOVIES_ERROR")) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+                if (s.equals("ATTEMPT_TO_RECEIVE_DATA")) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+                if (s.equals("MOVIES_RECEIVED")) {
+                    setDefaultObserver(null);
+                    progressAnimationHelper.stopInfiniteAnimation();
+                    Log.d(TAG, "movies data received successfully");
+                }
+                if (s.equals("MOVIES_UPDATING")) {
+                    removeObservers();
+                    if (!mainAnimationHelper.isInProgress())
+                        progressAnimationHelper.playInfiniteAnimation();
+                    Log.d(TAG, "movies data is receiving in progress");
+                }
 
-        }
+            }
         });
 
-        }
+    }
 
-public void removeObservers() {
+    public void removeObservers() {
         currentRVliveData.removeObservers(this);
-        }
+    }
 
-public void setDefaultObserver(Integer scrollToPosition) {
+    public void setDefaultObserver(Integer scrollToPosition) {
         currentRVliveData.removeObservers(this);
         currentRVliveData.observe(this, new Observer<PagedList<FilmixMovie>>() {
 
-@Override
-public void onChanged(@Nullable PagedList<FilmixMovie> movies) {
-        pagingAdapter.submitList(movies);
-        if ((movies != null ? movies.size() : 0) > 0) {
-        mainAnimationHelper.stopInfiniteAnimation();
-        }
-        }
+            @Override
+            public void onChanged(@Nullable PagedList<FilmixMovie> movies) {
+                pagingAdapter.submitList(movies);
+                if ((movies != null ? movies.size() : 0) > 0) {
+                    mainAnimationHelper.stopInfiniteAnimation();
+                }
+            }
         });
         if (scrollToPosition != null) {
-        Objects.requireNonNull(recyclerView.getLayoutManager()).scrollToPosition(scrollToPosition);
+            Objects.requireNonNull(recyclerView.getLayoutManager()).scrollToPosition(scrollToPosition);
         }
-        }
+    }
 
-public void clearAdapterData(){
+    public void clearAdapterData() {
         pagingAdapter.submitList(null);
-        }
-public void setPagingAdapterData(PagedList<FilmixMovie> movies) {
+    }
+
+    public void setPagingAdapterData(PagedList<FilmixMovie> movies) {
         currentRVliveData.removeObservers(this);
         clearAdapterData();
         pagingAdapter.submitList(movies);
         Objects.requireNonNull(recyclerView.getLayoutManager()).scrollToPosition(0);
 
-        }
+    }
 
-private void reInitViewModelData() {
+    private void reInitViewModelData() {
         movieViewModel.clearMovieData();
-        }
+    }
 
-@Override
-public void onMovieClick(FilmixMovie movie) {
+    @Override
+    public void onMovieClick(FilmixMovie movie) {
         Log.d("TAG", "Movie clicked id: " + movie.getId());
         Intent intent = new Intent(App.context, MovieActivity.class);
 
-        intent.putExtra(MovieActivity.EXTRA_ONLINE_MODE,movieViewModel.isOnlineMode());
+        intent.putExtra(MovieActivity.EXTRA_ONLINE_MODE, movieViewModel.isOnlineMode());
         intent.putExtra(MovieActivity.EXTRA_ID, movie.getId());
         intent.putExtra(MovieActivity.EXTRA_POSTER_URL, movie.getFilmPosterUrl());
         intent.putExtra(MovieActivity.EXTRA_TITLE, movie.getName());
 
         startActivityForResult(intent, VIEW_MOVIE_REQUEST);
-        }
+    }
 
-@Override
-public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        }
+    }
 
-@Override
-public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        }
+    }
 
-public void setOnlineMode(boolean onlineMode) {
+    public void setOnlineMode(boolean onlineMode) {
         movieViewModel.setOnlineMode(onlineMode);
-        }
+    }
 }

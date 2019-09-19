@@ -21,24 +21,19 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProvider.Factory;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat.AnimationCallback;
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 import com.bumptech.glide.load.MultiTransformation;
-import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.denspark.strelets.cinematrix.R;
 import com.denspark.strelets.cinematrix.adapters.ActorsInMovieRvAdapter;
 import com.denspark.strelets.cinematrix.adapters.ActorsInMovieRvAdapter.ActorClickListener;
 import com.denspark.strelets.cinematrix.adapters.playlist_adapter.PlaylistTreeViewBuilder;
@@ -46,7 +41,6 @@ import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.database.entity.Genre;
 import com.denspark.strelets.cinematrix.database.entity.Person;
 import com.denspark.strelets.cinematrix.glide.GlideApp;
-import com.denspark.strelets.cinematrix.R;
 import com.denspark.strelets.cinematrix.not_for_production.HttpController;
 import com.denspark.strelets.cinematrix.not_for_production.playlist.Playlist;
 import com.denspark.strelets.cinematrix.utils.DimensionUtils;
@@ -54,16 +48,21 @@ import com.denspark.strelets.cinematrix.view_models.FactoryViewModel;
 import com.denspark.strelets.cinematrix.view_models.MovieViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback;
-import dagger.android.AndroidInjection;
-import jp.wasabeef.glide.transformations.CropTransformation;
-import jp.wasabeef.glide.transformations.SupportRSBlurTransformation;
 
-import java.util.Comparator;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import javax.inject.Inject;
-import org.apache.commons.lang3.StringUtils;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import dagger.android.AndroidInjection;
+import jp.wasabeef.glide.transformations.CropTransformation;
+import jp.wasabeef.glide.transformations.SupportRSBlurTransformation;
 
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
@@ -115,6 +114,10 @@ public class MovieActivity extends AppCompatActivity implements ActorClickListen
     TextView movie_title_d_tv;
     @BindView(R.id.movie_year)
     TextView movie_year_d_tv;
+    @BindView(R.id.pos_rating_value_a_movie)
+    TextView posRatingValueAMovie;
+    @BindView(R.id.neg_rating_value_a_movie)
+    TextView negRatingValueAMovie;
     @BindView(R.id.play_btn)
     Button playButton;
     @BindView(R.id.playlist_container)
@@ -365,6 +368,8 @@ public class MovieActivity extends AppCompatActivity implements ActorClickListen
         });
         this.movie_duration_d_tv.setText(movie.getDuration());
         this.movie_description_d_tv.setText(movie.getDescriptionStory());
+        this.posRatingValueAMovie.setText(" +" + movie.getPosRating());
+        this.negRatingValueAMovie.setText(" -" + movie.getNegRating());
     }
 
 

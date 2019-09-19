@@ -5,6 +5,8 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.RoomWarnings;
+
 import com.denspark.strelets.cinematrix.database.entity.Genre;
 import com.denspark.strelets.cinematrix.database.entity.Person;
 import com.denspark.strelets.cinematrix.database.entity.PersonMoviesJoin;
@@ -17,9 +19,11 @@ public interface PersonMovieDao extends JoinDao {
     void insert(PersonMoviesJoin personMoviesJoin);
 
     @Query("SELECT * FROM people INNER JOIN person_movie_join ON people.id=person_movie_join.personId WHERE person_movie_join.movieId=:movieId")
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     LiveData<List<Person>> getPersonsForMovies(int movieId);
 
     @Query("SELECT * FROM movie INNER JOIN person_movie_join ON movie.id=person_movie_join.movieId WHERE person_movie_join.personId=:personId")
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     List<Genre> getMoviesForPerson(int personId);
 
     @Query("DELETE FROM person_movie_join")
