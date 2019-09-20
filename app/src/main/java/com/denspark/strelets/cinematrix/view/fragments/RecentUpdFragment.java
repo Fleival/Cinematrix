@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.denspark.strelets.cinematrix.App;
 import com.denspark.strelets.cinematrix.R;
@@ -24,6 +25,7 @@ import com.denspark.strelets.cinematrix.adapters.HorizontalBigMoviesAdapter;
 import com.denspark.strelets.cinematrix.adapters.HorizontalMedMoviesAdapter;
 import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
 import com.denspark.strelets.cinematrix.view.activities.MovieActivity;
+import com.denspark.strelets.cinematrix.view.custom_views.MySwipeToRefresh;
 import com.denspark.strelets.cinematrix.view_models.FactoryViewModel;
 import com.denspark.strelets.cinematrix.view_models.MovieViewModel;
 
@@ -55,9 +57,12 @@ public class RecentUpdFragment extends Fragment implements HorizontalAdapterList
     @BindView(R.id.recent_tv_series_recycler_view)
     RecyclerView recentTvSeriesRecyclerView;
 
-    private LiveData<PagedList<FilmixMovie>>popularMoviesLiveData;
-    private LiveData<PagedList<FilmixMovie>>recentMoviesLiveData;
-    private LiveData<PagedList<FilmixMovie>>recentTvSeriesLiveData;
+    @BindView(R.id.swipe_to_refresh_recent_layout)
+    MySwipeToRefresh swipeRefreshLayout;
+
+    private LiveData<PagedList<FilmixMovie>> popularMoviesLiveData;
+    private LiveData<PagedList<FilmixMovie>> recentMoviesLiveData;
+    private LiveData<PagedList<FilmixMovie>> recentTvSeriesLiveData;
 
 
     @Nullable
@@ -81,7 +86,7 @@ public class RecentUpdFragment extends Fragment implements HorizontalAdapterList
         ((SimpleItemAnimator) recentTvSeriesRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         recentTvSeriesRecyclerView.setHasFixedSize(false);
         recentTvSeriesRecyclerView.setAdapter(recentTvSeriesPagingAdapter);
-
+        initSwipeToRefreshLayout();
         return view;
     }
 
@@ -95,10 +100,56 @@ public class RecentUpdFragment extends Fragment implements HorizontalAdapterList
     private void configureDagger() {
         AndroidSupportInjection.inject(this);
     }
+
     private void configureViewModel() {
         movieViewModel = new ViewModelProvider(getActivity(), viewModelFactory)
                 .get(MovieViewModel.class);
-        popularMoviesLiveData= movieViewModel.getPopularMovies();
+        reInitViewModelData(movieViewModel);
+    }
+
+    @Override
+    public void onMovieClick(FilmixMovie movie) {
+        Log.d("TAG", "Movie clicked id: " + movie.getId());
+        Intent intent = new Intent(App.context, MovieActivity.class);
+
+        intent.putExtra(MovieActivity.EXTRA_ONLINE_MODE, movieViewModel.isOnlineMode());
+        intent.putExtra(MovieActivity.EXTRA_ID, movie.getId());
+        intent.putExtra(MovieActivity.EXTRA_POSTER_URL, movie.getFilmPosterUrl());
+        intent.putExtra(MovieActivity.EXTRA_TITLE, movie.getName());
+
+        startActivityForResult(intent, VIEW_MOVIE_REQUEST);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    private void initSwipeToRefreshLayout() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reInitViewModelData(movieViewModel);
+//                mainAnimationHelper.playInfiniteAnimation();
+//                mMainVectorAnimationHelper.showWorkingInProgressInstead();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    private void reInitViewModelData(MovieViewModel movieViewModel) {
+        if (popularMoviesLiveData != null) {
+            popularMoviesLiveData.removeObservers(this);
+        }
+        if (recentMoviesLiveData != null) {
+            recentMoviesLiveData.removeObservers(this);
+        }
+        if (recentTvSeriesLiveData != null) {
+            recentTvSeriesLiveData.removeObservers(this);
+        }
+
+        popularMoviesLiveData = movieViewModel.getPopularMovies();
         popularMoviesLiveData.observe(this, new Observer<PagedList<FilmixMovie>>() {
             @Override
             public void onChanged(PagedList<FilmixMovie> filmixMovies) {
@@ -111,25 +162,6 @@ public class RecentUpdFragment extends Fragment implements HorizontalAdapterList
 
         recentTvSeriesLiveData = movieViewModel.getLastTvSeries();
         recentTvSeriesLiveData.observe(this, filmixMovies -> recentTvSeriesPagingAdapter.submitList(filmixMovies));
-    }
-
-    @Override
-    public void onMovieClick(FilmixMovie movie) {
-        Log.d("TAG", "Movie clicked id: " + movie.getId());
-        Intent intent = new Intent(App.context, MovieActivity.class);
-
-        intent.putExtra(MovieActivity.EXTRA_ONLINE_MODE,movieViewModel.isOnlineMode());
-        intent.putExtra(MovieActivity.EXTRA_ID, movie.getId());
-        intent.putExtra(MovieActivity.EXTRA_POSTER_URL, movie.getFilmPosterUrl());
-        intent.putExtra(MovieActivity.EXTRA_TITLE, movie.getName());
-
-        startActivityForResult(intent, VIEW_MOVIE_REQUEST);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
 }
