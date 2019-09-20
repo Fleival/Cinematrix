@@ -22,18 +22,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.denspark.strelets.cinematrix.App;
 import com.denspark.strelets.cinematrix.R;
 import com.denspark.strelets.cinematrix.adapters.MoviePagingAdapter;
 import com.denspark.strelets.cinematrix.database.entity.FilmixMovie;
-import com.denspark.strelets.cinematrix.view.LottieAnimationHelper;
 import com.denspark.strelets.cinematrix.view.activities.MovieActivity;
 import com.denspark.strelets.cinematrix.view_models.FactoryViewModel;
 import com.denspark.strelets.cinematrix.view_models.MovieViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -44,7 +40,7 @@ import dagger.android.support.AndroidSupportInjection;
 
 public class FilmsFragment extends Fragment implements
         MoviePagingAdapter.MoviePagingAdapterListener {
-    public static final int VIEW_MOVIE_REQUEST = 1;
+    public static final int VIEW_MOVIE_REQUEST = 2;
     private Unbinder unbinder;
 
 
@@ -56,8 +52,8 @@ public class FilmsFragment extends Fragment implements
     private MovieViewModel movieViewModel;
     private MoviePagingAdapter pagingAdapter;
 
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+    @BindView(R.id.recycler_view_films)
+    RecyclerView recyclerViewFilms;
 
     @BindView(R.id.retry_refresh)
     Button retryBtn;
@@ -68,17 +64,9 @@ public class FilmsFragment extends Fragment implements
     LinearLayout llBottomSheet;
     BottomSheetBehavior bottomSheetBehavior;
 
-    @BindView(R.id.lav_loading_new_content)
-    LottieAnimationView mainLoadingAnimation;
 
-    @BindView(R.id.lav_progress_indicator)
-    LottieAnimationView progressLoadingAnimation;
 
-    LottieAnimationHelper mainAnimationHelper;
-
-    LottieAnimationHelper progressAnimationHelper;
-
-    private LiveData<PagedList<FilmixMovie>> currentRVliveData;
+    private LiveData<PagedList<FilmixMovie>> recyclerLiveData;
 
     public FilmsFragment() {
     }
@@ -95,15 +83,12 @@ public class FilmsFragment extends Fragment implements
         unbinder = ButterKnife.bind(this, view);
 
         pagingAdapter = new MoviePagingAdapter(this);// TODO: 23.05.2019 make OnClickListener in adapter
-        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        ((SimpleItemAnimator) recyclerViewFilms.getItemAnimator()).setSupportsChangeAnimations(false);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
 
-        recyclerView.setHasFixedSize(false);//// TRUE will cause item jumping!!!
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(pagingAdapter);
-        mainAnimationHelper = new LottieAnimationHelper(mainLoadingAnimation, recyclerView);
-        initSwipeToRefreshLayout();
-        progressAnimationHelper = new LottieAnimationHelper(progressLoadingAnimation, null);
+        recyclerViewFilms.setHasFixedSize(false);//// TRUE will cause item jumping!!!
+        recyclerViewFilms.setLayoutManager(layoutManager);
+        recyclerViewFilms.setAdapter(pagingAdapter);
 
         llBottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
@@ -118,8 +103,8 @@ public class FilmsFragment extends Fragment implements
                 Log.d(TAG, "retryDataTransmission: " + movieViewModel.retryDataTransmission());
             }
         });
-        mainAnimationHelper.playInfiniteAnimation();
-
+        recyclerLiveData = null;
+        initSwipeToRefreshLayout();
         return view;
     }
 
@@ -129,8 +114,6 @@ public class FilmsFragment extends Fragment implements
             @Override
             public void onRefresh() {
                 reInitViewModelData();
-                mainAnimationHelper.playInfiniteAnimation();
-//                mMainVectorAnimationHelper.showWorkingInProgressInstead();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -154,69 +137,22 @@ public class FilmsFragment extends Fragment implements
                 .get(MovieViewModel.class);
 
 
-        currentRVliveData = movieViewModel.getMovies();
-
-        setDefaultObserver(0);
-        movieViewModel.networkStateMessage().observe(getActivity(), new Observer<String>() {
+        recyclerLiveData = movieViewModel.getAllMoviesRemote();
+        recyclerLiveData.observe(this, new Observer<PagedList<FilmixMovie>>() {
             @Override
-            public void onChanged(String s) {
-                if (s.equals("MOVIES_ERROR")) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                }
-                if (s.equals("ATTEMPT_TO_RECEIVE_DATA")) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                }
-                if (s.equals("MOVIES_RECEIVED")) {
-                    setDefaultObserver(null);
-                    progressAnimationHelper.stopInfiniteAnimation();
-                    Log.d(TAG, "movies data received successfully");
-                }
-                if (s.equals("MOVIES_UPDATING")) {
-                    removeObservers();
-                    if (!mainAnimationHelper.isInProgress())
-                        progressAnimationHelper.playInfiniteAnimation();
-                    Log.d(TAG, "movies data is receiving in progress");
-                }
-
+            public void onChanged(PagedList<FilmixMovie> filmixMovies) {
+                pagingAdapter.submitList(filmixMovies);
             }
         });
 
-    }
-
-    public void removeObservers() {
-        currentRVliveData.removeObservers(this);
-    }
-
-    public void setDefaultObserver(Integer scrollToPosition) {
-        currentRVliveData.removeObservers(this);
-        currentRVliveData.observe(this, new Observer<PagedList<FilmixMovie>>() {
-
-            @Override
-            public void onChanged(@Nullable PagedList<FilmixMovie> movies) {
-                pagingAdapter.submitList(movies);
-                if ((movies != null ? movies.size() : 0) > 0) {
-                    mainAnimationHelper.stopInfiniteAnimation();
-                }
-            }
-        });
-        if (scrollToPosition != null) {
-            Objects.requireNonNull(recyclerView.getLayoutManager()).scrollToPosition(scrollToPosition);
-        }
-    }
-
-    public void clearAdapterData(){
-        pagingAdapter.submitList(null);
-    }
-    public void setPagingAdapterData(PagedList<FilmixMovie> movies) {
-        currentRVliveData.removeObservers(this);
-        clearAdapterData();
-        pagingAdapter.submitList(movies);
-        Objects.requireNonNull(recyclerView.getLayoutManager()).scrollToPosition(0);
 
     }
 
     private void reInitViewModelData() {
-        movieViewModel.clearMovieData();
+        if (recyclerLiveData != null) {
+            recyclerLiveData.removeObservers(this);
+        }
+        recyclerLiveData = movieViewModel.getAllMoviesRemote();
     }
 
     @Override
@@ -224,7 +160,7 @@ public class FilmsFragment extends Fragment implements
         Log.d("TAG", "Movie clicked id: " + movie.getId());
         Intent intent = new Intent(App.context, MovieActivity.class);
 
-        intent.putExtra(MovieActivity.EXTRA_ONLINE_MODE,movieViewModel.isOnlineMode());
+        intent.putExtra(MovieActivity.EXTRA_ONLINE_MODE, movieViewModel.isOnlineMode());
         intent.putExtra(MovieActivity.EXTRA_ID, movie.getId());
         intent.putExtra(MovieActivity.EXTRA_POSTER_URL, movie.getFilmPosterUrl());
         intent.putExtra(MovieActivity.EXTRA_TITLE, movie.getName());
@@ -241,9 +177,5 @@ public class FilmsFragment extends Fragment implements
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    public void setOnlineMode(boolean onlineMode) {
-        movieViewModel.setOnlineMode(onlineMode);
     }
 }

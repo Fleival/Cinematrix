@@ -30,6 +30,8 @@ public class MovieViewModel extends ViewModel {
     private LiveData<PagedList<FilmixMovie>> popularMovies;
     private LiveData<PagedList<FilmixMovie>> lastMovies;
     private LiveData<PagedList<FilmixMovie>> lastTvSeries;
+    private LiveData<PagedList<FilmixMovie>> allMoviesRemote;
+    private LiveData<PagedList<FilmixMovie>> allTvSeriesRemote;
     private FilmixMovie currentMovie;
     private LiveData<FilmixMovie> currentLiveDataMovie;
 
@@ -242,5 +244,14 @@ public class MovieViewModel extends ViewModel {
     public LiveData<PagedList<FilmixMovie>> getLastTvSeries() {
         lastTvSeries = repository.getLastTvSeries(config_online_mode);
         return lastTvSeries;
+    }
+    public LiveData<PagedList<FilmixMovie>> getAllMoviesRemote() {
+        allMoviesRemote = repository.getAllMoviesRemote(config_online_mode);
+        return allMoviesRemote;
+    }
+
+    public LiveData<PagedList<FilmixMovie>> getAllTvSeriesRemote() {
+        allTvSeriesRemote = repository.getAllTvSeriesRemote(config_online_mode);
+        return allTvSeriesRemote;
     }
 }

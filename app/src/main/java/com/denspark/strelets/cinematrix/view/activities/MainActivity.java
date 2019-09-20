@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
 
 
         isUp = true;
-        FilmsFragment filmsFr = (FilmsFragment) filmsFragment;
+        TvSeriesFragment tvFr = (TvSeriesFragment) tvSeriesFragment;
 
         try {
             Field popup = Spinner.class.getDeclaredField("mPopup");
@@ -253,15 +253,15 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
 
                 if (filterLiveData != null) {
                     filterLiveData.removeObservers(MainActivity.this);
-                    filmsFr.removeObservers();
+                    tvFr.removeObservers();
                 }
                 filterLiveData = movieViewModel.searchFilteredMovies(null, selected_year_item, selected_country_item, selected_genre_items);
-                filmsFr.setOnlineMode(true);
+                tvFr.setOnlineMode(true);
                 filterLiveData.observe(MainActivity.this, new Observer<PagedList<FilmixMovie>>() {
                     @Override
                     public void onChanged(PagedList<FilmixMovie> movies) {
                         Log.d(TAG, "onChanged: filtered films " + movies);
-                        filmsFr.setPagingAdapterData(movies);
+                        tvFr.setPagingAdapterData(movies);
                     }
                 });
                 filterBtn.setSelected((!filterBtn.isSelected()));
@@ -278,9 +278,9 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
                 if (filterLiveData != null) {
                     filterLiveData.removeObservers(MainActivity.this);
                 }
-                filmsFr.setOnlineMode(false);
-                filmsFr.clearAdapterData();
-                filmsFr.setDefaultObserver(0);
+                tvFr.setOnlineMode(false);
+                tvFr.clearAdapterData();
+                tvFr.setDefaultObserver(0);
                 filterBtn.setSelected((!filterBtn.isSelected()));
                 onSlideViewButtonClick(filterLinearLayout);
             }
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
                 if (count > 2) {
                     if (filterLiveData != null) {
                         filterLiveData.removeObservers(MainActivity.this);
-                        filmsFr.removeObservers();
+                        tvFr.removeObservers();
                     }
 
                     filterLiveData = movieViewModel.searchFilteredMovies(s.toString(),
@@ -308,21 +308,21 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
                             selected_country_item,
                             selected_genre_items);
 
-                    filmsFr.setOnlineMode(true);
+                    tvFr.setOnlineMode(true);
                     filterLiveData.observe(MainActivity.this, new Observer<PagedList<FilmixMovie>>() {
                         @Override
                         public void onChanged(PagedList<FilmixMovie> movies) {
                             Log.d(TAG, "onChanged: filtered films " + movies);
-                            filmsFr.setPagingAdapterData(movies);
+                            tvFr.setPagingAdapterData(movies);
                         }
                     });
                 } else {
                     if (filterLiveData != null) {
                         filterLiveData.removeObservers(MainActivity.this);
                     }
-                    filmsFr.setOnlineMode(false);
-                    filmsFr.clearAdapterData();
-                    filmsFr.setDefaultObserver(0);
+                    tvFr.setOnlineMode(false);
+                    tvFr.clearAdapterData();
+                    tvFr.setDefaultObserver(0);
                 }
 
             }

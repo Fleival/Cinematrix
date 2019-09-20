@@ -39,7 +39,7 @@ import dagger.android.support.AndroidSupportInjection;
 public class RecentUpdFragment extends Fragment implements HorizontalAdapterListener {
     private Unbinder unbinder;
     private static final String TAG = "RecentUpdFragment";
-    public static final int VIEW_MOVIE_REQUEST = 2;
+    public static final int VIEW_MOVIE_REQUEST = 1;
     @Inject
     FactoryViewModel viewModelFactory;
     private MovieViewModel movieViewModel;
@@ -131,8 +131,6 @@ public class RecentUpdFragment extends Fragment implements HorizontalAdapterList
             @Override
             public void onRefresh() {
                 reInitViewModelData(movieViewModel);
-//                mainAnimationHelper.playInfiniteAnimation();
-//                mMainVectorAnimationHelper.showWorkingInProgressInstead();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });

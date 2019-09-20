@@ -78,4 +78,14 @@ public interface MovieWebService {
     Call<List<FilmixMovie>> getLastTvSeries(
             @Query("page") int page,
             @Query("limit")int maxResult );
+
+    @GET("/filmix/all_movies")
+    Call<List<FilmixMovie>> getAllMovies(
+            @Query("page") int page,
+            @Query("limit")int maxResult );
+
+    @GET("/filmix/all_tv_series")
+    Call<List<FilmixMovie>> getAllTvSeries(
+            @Query("page") int page,
+            @Query("limit")int maxResult );
 }

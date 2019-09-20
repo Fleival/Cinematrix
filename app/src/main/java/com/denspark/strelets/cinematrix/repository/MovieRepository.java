@@ -600,4 +600,14 @@ public class MovieRepository {
         FilmsServerDataSourceFactory filmsServerDataSourceFactory = new FilmsServerDataSourceFactory(webservice,30, fromString("LAST_TV_SERIES"));
         return new LivePagedListBuilder<Integer, FilmixMovie>(filmsServerDataSourceFactory, config).setFetchExecutor(executor).build();
     }
+
+    public LiveData<PagedList<FilmixMovie>> getAllMoviesRemote(PagedList.Config config) {
+        FilmsServerDataSourceFactory filmsServerDataSourceFactory = new FilmsServerDataSourceFactory(webservice,30, fromString("ALL_MOVIES"));
+        return new LivePagedListBuilder<Integer, FilmixMovie>(filmsServerDataSourceFactory, config).setFetchExecutor(executor).build();
+    }
+
+    public LiveData<PagedList<FilmixMovie>> getAllTvSeriesRemote(PagedList.Config config) {
+        FilmsServerDataSourceFactory filmsServerDataSourceFactory = new FilmsServerDataSourceFactory(webservice,30, fromString("ALL_TV_SERIES"));
+        return new LivePagedListBuilder<Integer, FilmixMovie>(filmsServerDataSourceFactory, config).setFetchExecutor(executor).build();
+    }
 }

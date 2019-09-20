@@ -44,11 +44,11 @@ import dagger.android.support.AndroidSupportInjection;
 
 public class TvSeriesFragment extends Fragment implements
         MoviePagingAdapter.MoviePagingAdapterListener {
-    public static final int VIEW_MOVIE_REQUEST = 1;
+    public static final int VIEW_MOVIE_REQUEST = 3;
     private Unbinder unbinder;
 
 
-    private static final String TAG = "FilmsFragment";
+    private static final String TAG = "TvSeriesFragment";
 
     @Inject
     FactoryViewModel viewModelFactory;
@@ -56,7 +56,7 @@ public class TvSeriesFragment extends Fragment implements
     private MovieViewModel movieViewModel;
     private MoviePagingAdapter pagingAdapter;
 
-    @BindView(R.id.recycler_view)
+    @BindView(R.id.recycler_view_tv_series)
     RecyclerView recyclerView;
 
     @BindView(R.id.retry_refresh)

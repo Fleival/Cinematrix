@@ -31,6 +31,14 @@ public class FilmsServerDataSourceFactory extends DataSource.Factory {
                 dataSource = new LastTvSeriesFilmDataSource(mWebService, maxResult);
             }
             break;
+            case ALL_MOVIES: {
+                dataSource = new AllMoviesFilmDataSource(mWebService, maxResult);
+            }
+            break;
+            case ALL_TV_SERIES: {
+                dataSource = new AllTvSeriesFilmDataSource(mWebService, maxResult);
+            }
+            break;
         }
         return dataSource;
     }
